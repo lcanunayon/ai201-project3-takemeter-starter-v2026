@@ -42,6 +42,10 @@
 <!-- Your community, and what your classifier sorts posts into. Three or four
      sentences. -->
 
+r/Boxing (reddit forum on boxing)
+
+My classifier will sort comments/posts by what they bring to the discussion. Some posts are humourous, some are common discourse, and some are informative. I also want to have an offensive label too for offensive posts, including swears.
+
 
 
 ---
@@ -54,33 +58,49 @@
      The decision rule is worth a point on its own and it's the thing most
      people leave out. Every taxonomy has a hardest boundary. Name yours. -->
 
-### `label_one`
+### `Hot_take`
 
 **Definition:**
+A post that suggests something between
+one or more fighters. Can be a possible 
+good matchup, their mindset with their
+career, etc. 
 
 **Example 1:**
->
+> Witnessed it. And i was a hater back then. But dudes legit
 
 **Example 2:**
->
+> Straight dawg too. Fought everyone and their mama. Didn't matter if they were right in their prime and he was aging. Absolute dawg. If you wanted smoke, he was happy to oblige
 
-### `label_two`
+### `Informative`
 
 **Definition:**
+Has a checkable fact in the post which can inform the viewer.
 
 **Example 1:**
->
+>It was before my time but Oscar in his prime is elite. "Oscar De La Hoya won 11 world titles across six weight classes during his professional boxing career, along with 3 lineal championships."
 
 **Example 2:**
->
+> His serious left punch was recorded by a tv show before and according to them the force is just as great as a shot from a shotgun
+
+
+
+
 
 ### The hardest boundary
 
 **Which two labels:**
 
+Bonderline post:
+>I'm 5'10" 140lbs Filipino and got ~800 by getting a running start and Superman punching the machine. My glasses flew off when I made contact. This dude just stands there
+
+We cannot check the fact of this random poster, but he is making a hot_take that the fighter he is talking about is extraordinary.
+
 **The decision rule I used every time:**
 <!-- e.g. "If the post names a specific checkable fact, it's `analysis`, even
      if the tone is heated." -->
+
+If the post names a specific checkable fact, it is "informative", even if the post may not be professional. If it is simply a suggestion, it will be a hot_take. 
 
 
 
