@@ -136,18 +136,23 @@ If the post names a specific fact that can be checked from a public source, it i
      cases. -->
 
 **Where the posts came from:**
+Public comments copied by hand from three r/boxing threads in October 2026: one about Ricky Hatton's estate and his family, one about a Deontay Wilder knockout (which turned into a Wilder vs Zhang debate), and one about Ryan Garcia stopping Conor Benn. I pasted the whole threads into text files and used a small script to strip the Reddit page clutter (usernames, timestamps, vote counts, buttons, badges and two ads), then checked for duplicates. That gave 229 comments; I kept the first 200 and dropped the last 29. Posts are kept whole, including some off-topic replies (a gym story, posts about wrestler Chris Benoît), because that's what the threads actually contained.
 
 **How I labelled them:** <!-- Cold first? Pre-labelled with AI and corrected?
 Say so plainly — the disclosure is required, not penalised. -->
+I labelled the first 20 posts cold, on my own with no tools, using only my definitions (`note` = `cold`). The other 180 were pre-labelled by an AI tool (Claude) given my four definitions and decision rules. I then read every one of those 180 and checked the label (`note` = `pre-labelled, checked`). Close calls are flagged with `hard:` in the note.
 
 **Counts per label:**
 
 | Label | Count | Share |
 |---|---|---|
-|  |  |  |
-|  |  |  |
-|  |  |  |
-| **Total** |  | 100% |
+| `hot_take` | 120 | 60% |
+| `humorous` | 40 | 20% |
+| `informative` | 32 | 16% |
+| `offensive` | 8 | 4% |
+| **Total** | 200 | 100% |
+
+`hot_take` is above the 50% cap in my criterion #2, and `offensive` has only 8 examples, so expect about one in the test split. Part of the reason `hot_take` is so big is that questions, bare reactions ("Depressing stuff") and off-topic replies don't fit any of my four labels, and they all ended up as `hot_take`.
 
 **Three hard cases**
 
@@ -155,25 +160,25 @@ Say so plainly — the disclosure is required, not penalised. -->
      been, and what you chose. These are worth more than the easy 190. -->
 
 **1.**
-> *The post:*
+> *The post:* I don't buy that tbh, that always seemed like a 'save face' explanation. The fact he was training for some shocker of a fight in Dubai makes a more compelling case for money issues imo.
 >
-> *Could have been:*
+> *Could have been:* `hot_take` or `informative`
 >
-> *I chose, because:*
+> *I chose, because:* `informative`, because it talks about the users own case for another topic, and the reasons for it. Making it an informative post.
 
 **2.**
-> *The post:*
+> *The post:* Yeah bro he was so special, knocking out every can fighter he stepped in the ring with. What a legend, I will never forget when he knocked out Herndon...
 >
-> *Could have been:*
+> *Could have been:* `humorous` or `hot_take`
 >
-> *I chose, because:*
+> *I chose, because:* `humorous`, because it is a sarcastic post about knocking out "cans", a fighter than is unworthy of any praise. Humorous.
 
 **3.**
-> *The post:*
+> *The post:* Stomp that ho
 >
-> *Could have been:*
+> *Could have been:* `humorous` or `offensive`
 >
-> *I chose, because:*
+> *I chose, because:* `humorous`, because it is a humorous statement and is not meant to be taken seriously. Humourous.
 
 ---
 
