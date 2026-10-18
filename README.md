@@ -44,7 +44,7 @@
 
 r/Boxing (reddit forum on boxing)
 
-My classifier will sort comments/posts by what they bring to the discussion. Some posts are opinions about fighters, some are informative, some are just jokes, and some are offensive. It sorts each post into one of four labels: `hot_take`, `informative`, `humorous`, or `offensive`.
+My classifier will sort comments/posts by what they bring to the discussion. Some posts are opinions about fighters, some are informative, some are just jokes, and some are offensive. It sorts each post into one of four labels: `hot_take`, `informative`, `humorous`, or `offensive`. The offensive will win if there is an offensive word/idea insulting a fighter, even if it is for example informative as well.
 
 ---
 
@@ -221,15 +221,15 @@ Three labels have fewer than 8 examples in the test split: `informative` (5), `h
 
 **Moment 1**
 
-- *What I asked for:*
-- *What came back:*
-- *What I changed:*
+- *What I asked for: A labeller for reddit boxing comments/posts.*
+- *What came back: A labeller using the labels I chose that worked for all the posts we copy and pasted into the csv.*
+- *What I changed: Not much, the labels worked well.*
 
 **Moment 2**
 
-- *What I asked for:*
-- *What came back:*
-- *What I changed:*
+- *What I asked for: Help with criteria writing after I wrote my own.*
+- *What came back: Ideas for F1 acceptance in order to test my model.*
+- *What I changed: I changed some of the F1 numbers to match what I wanted, and it worked well.*
 
 **Pre-labelling disclosure:**
 
