@@ -186,17 +186,27 @@ I labelled the first 20 posts cold, on my own with no tools, using only my defin
 
 <!-- Your starting model, your settings, and anything you changed and why. -->
 
-**Base model:**
+**Base model:** `distilbert-base-uncased`
 
 **Settings:** <!-- epochs, learning rate, batch size, seed -->
+3 epochs, learning rate 2e-5, batch size 16, max length 128 tokens, seed 42. Trained on **`cpu`** (Intel Core i9-12900K, PyTorch 2.14.1+cpu), which is also what `results.json` recorded. Training took about a minute.
 
 **Anything I changed from the defaults, and why:**
+Nothing. I used the notebook defaults.
 
 **Split sizes:** <!-- train / val / test, and per-label counts in the test
 split. If a label had fewer than about 8 in test, say so — it explains a lot
 of next unit's variance. -->
+train 139 / val 31 / test 30.
 
+| Label | Train | Val | Test |
+|---|---|---|---|
+| `hot_take` | 83 | 19 | 18 |
+| `informative` | 22 | 5 | 5 |
+| `humorous` | 28 | 6 | 6 |
+| `offensive` | 6 | 1 | 1 |
 
+Three labels have fewer than 8 examples in the test split: `informative` (5), `humorous` (6) and `offensive` (1). Their F1 scores rest on very few posts and will move a lot between seeds. `offensive` with a single test post can only score 0 or 1.
 
 ---
 
