@@ -44,9 +44,7 @@
 
 r/Boxing (reddit forum on boxing)
 
-My classifier will sort comments/posts by what they bring to the discussion. Some posts are humourous, some are common discourse, and some are informative. I also want to have an offensive label too for offensive posts, including swears.
-
-
+My classifier will sort comments/posts by what they bring to the discussion. Some posts are opinions about fighters, some are informative, some are just jokes, and some are offensive. It sorts each post into one of four labels: `hot_take`, `informative`, `humorous`, or `offensive`.
 
 ---
 
@@ -58,13 +56,10 @@ My classifier will sort comments/posts by what they bring to the discussion. Som
      The decision rule is worth a point on its own and it's the thing most
      people leave out. Every taxonomy has a hardest boundary. Name yours. -->
 
-### `Hot_take`
+### `hot_take`
 
 **Definition:**
-A post that suggests something between
-one or more fighters. Can be a possible 
-good matchup, their mindset with their
-career, etc. 
+A confident opinion about a fighter, fight or matchup with no checkable fact backing it up.
 
 **Example 1:**
 > Witnessed it. And i was a hater back then. But dudes legit
@@ -72,10 +67,10 @@ career, etc.
 **Example 2:**
 > Straight dawg too. Fought everyone and their mama. Didn't matter if they were right in their prime and he was aging. Absolute dawg. If you wanted smoke, he was happy to oblige
 
-### `Informative`
+### `informative`
 
 **Definition:**
-Has a checkable fact in the post which can inform the viewer.
+Has a checkable fact in the post (something you could verify from a public source like a record, a broadcast or an article) which can inform the viewer.
 
 **Example 1:**
 >It was before my time but Oscar in his prime is elite. "Oscar De La Hoya won 11 world titles across six weight classes during his professional boxing career, along with 3 lineal championships."
@@ -83,26 +78,44 @@ Has a checkable fact in the post which can inform the viewer.
 **Example 2:**
 > His serious left punch was recorded by a tv show before and according to them the force is just as great as a shot from a shotgun
 
+### `humorous`
 
+**Definition:**
+No other purpose than to be funny.
 
+**Example 1:**
+> Jake Paul really thought he was a boxer LMAOO
 
+**Example 2:**
+> LMAO
+
+### `offensive`
+
+**Definition:**
+A post that insults or attacks a person or group. Swearing just for emphasis doesn't count.
+
+**Example 1:**
+> I fucking hate ryan garcia
+
+**Example 2:**
+> TODO: second real offensive post from your reading
 
 ### The hardest boundary
 
-**Which two labels:**
+**Which two labels:** `hot_take` vs `informative`
 
-Bonderline post:
+Borderline post:
 >I'm 5'10" 140lbs Filipino and got ~800 by getting a running start and Superman punching the machine. My glasses flew off when I made contact. This dude just stands there
 
-We cannot check the fact of this random poster, but he is making a hot_take that the fighter he is talking about is extraordinary.
+It has specific numbers in it, but we cannot check the facts of this random poster. What he is really saying is a hot_take: that the fighter he is talking about is extraordinary.
 
 **The decision rule I used every time:**
 <!-- e.g. "If the post names a specific checkable fact, it's `analysis`, even
      if the tone is heated." -->
 
-If the post names a specific checkable fact, it is "informative", even if the post may not be professional. If it is simply a suggestion, it will be a hot_take. 
+If the post names a specific fact that can be checked from a public source, it is `informative`, even if the post may not be professional. A personal story or numbers about the poster themselves don't count as checkable. If it is simply an opinion, it is a `hot_take`.
 
-
+**Other rule:** Swearing alone doesn't make a post `offensive`. "Bivol fucking destroyed Canelo, and we think Canelo is a GOAT?" is a `hot_take`, because the swear is emphasis, not an insult. A post is only `offensive` if it attacks someone.
 
 ---
 
