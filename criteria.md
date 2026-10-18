@@ -95,11 +95,13 @@ I wrote decision rules for my two hardest boundaries (personal stories with numb
 ## 4.
 
 <!-- Your criterion. -->
-On the held-out test set, predictions with confidence > 0.90 are right at least 90% of the time, and at least 80 points more often than predictions below that cutoff.
+On the held-out test set, predictions with confidence > 0.90 are right at least 90% of the time.
+
+For unsure confidence predictions, labelling should be right 70% of the time still.
 
 
 **Why this target:**
-Confidence should have a high cutoff such as .90 if confident, if unsure then .60 right on all checks is a better check.
+Confidence should have a high cutoff such as .90 if confident.
 
 
 
