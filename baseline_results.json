@@ -1,0 +1,190 @@
+{
+  "model": "facebook/bart-large-mnli",
+  "n": 30,
+  "seed": 42,
+  "held_out": true,
+  "used_definitions": true,
+  "scores": {
+    "n": 30,
+    "accuracy": 0.23333333333333334,
+    "f1_macro": 0.1282642089093702,
+    "per_label": {
+      "hot_take": {
+        "precision": 0.6666666666666666,
+        "recall": 0.1111111111111111,
+        "f1": 0.1904761904761905,
+        "support": 18
+      },
+      "humorous": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "support": 6
+      },
+      "informative": {
+        "precision": 0.19230769230769232,
+        "recall": 1.0,
+        "f1": 0.32258064516129037,
+        "support": 5
+      },
+      "offensive": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "support": 1
+      }
+    }
+  },
+  "predictions": [
+    {
+      "text": "I'm sure his dad had power of attorney, so look at him first. He's a rat.",
+      "gold": "offensive",
+      "predicted": "informative"
+    },
+    {
+      "text": "Meanwhile I offered to buy a used car for my parents for about 1k and they insisted it be a loan and paid me back, so I set it at \u00a310 a week and even then kept telling them don't worry.\nI bought them a new cooker a few years back as their previous one was over 20 years old and my mum was in tears telling me I didn't need to buy them anything.\nI offered to buy a new bed for them too, it was only a few years old but cheap and it was causing back pain and they declined.",
+      "gold": "hot_take",
+      "predicted": "informative"
+    },
+    {
+      "text": "Some people are saying it was an early stoppage, which I don\u2019t think it was at all, but even if it was I think it\u2019s pretty obvious that the ref saved Benn from a brutal KO that was going to happen sooner than later. He had nothing for Garcia and stopped throwing.",
+      "gold": "hot_take",
+      "predicted": "informative"
+    },
+    {
+      "text": "Fury definitely sends Reese some goodies every Christmas because majority of referees is calling that off.",
+      "gold": "humorous",
+      "predicted": "informative"
+    },
+    {
+      "text": "Unfortunately, that was his best \ud83d\udc80",
+      "gold": "humorous",
+      "predicted": "informative"
+    },
+    {
+      "text": "I thought it was early but looking at the highlights he was pretty much out from that right, just backed up the ropes and not defending himself so ye you're right it was not bad, it did look weird live though. If Benn was elite he'd of taken a knee",
+      "gold": "hot_take",
+      "predicted": "informative"
+    },
+    {
+      "text": "He didn't complain or shout early stoppage either I don't think he could, he looked at the ref like he'd just woken him up, think he knew he was rocked.",
+      "gold": "hot_take",
+      "predicted": "informative"
+    },
+    {
+      "text": "Oh there is cash alright. His ltd company has millions in cash reserves that's not even taking into consideration money that's been deployed or invested out of that business over the years. Mr Hatton was a very very wealthy man indeed.",
+      "gold": "informative",
+      "predicted": "informative"
+    },
+    {
+      "text": "Money corrupts. Prince Naseem Hamed went through a very similar experience as Ricky. I would say the parallels are uncanny:- trainer fallout, money fallout, family fall out, legal cases.",
+      "gold": "informative",
+      "predicted": "informative"
+    },
+    {
+      "text": "Dropped Fury with the right then left hook in Rd12 of the first fight",
+      "gold": "informative",
+      "predicted": "informative"
+    },
+    {
+      "text": "this is so fucking niche but its a good bar \ud83d\ude02",
+      "gold": "humorous",
+      "predicted": "hot_take"
+    },
+    {
+      "text": "For months I've felt like I've been going crazy, Benn was never that good he couldn't ever get out of his dads shadow.\nI'm not a huge Garcia fan, he's way too inconsistent for me but this [edit - the idea that Benn could beat Garcia] seemed like a big reach",
+      "gold": "hot_take",
+      "predicted": "hot_take"
+    },
+    {
+      "text": "I dunno. Think he was probably trying to search for some happiness he got from boxing by doing that fight.\nAlso his company accounts are detailed on companies house. There a few on there with current assets of \u00a32.5m and another I saw with \u00a37m in assets.\nHe owned multiple properties and investments. He had a lot of money coming in and he was never a Floyd Mayweather type being flashy with it.",
+      "gold": "informative",
+      "predicted": "informative"
+    },
+    {
+      "text": "Lmao.... Ok buddy",
+      "gold": "humorous",
+      "predicted": "informative"
+    },
+    {
+      "text": "r/thathappened",
+      "gold": "humorous",
+      "predicted": "informative"
+    },
+    {
+      "text": "Idk if this is my favorite 1-2 of all time, but I think it is the single hardest punch I've seen landed in a fight.",
+      "gold": "hot_take",
+      "predicted": "informative"
+    },
+    {
+      "text": "The Wilder that fought big bang was damaged and washed. This was prime Wilder.",
+      "gold": "hot_take",
+      "predicted": "informative"
+    },
+    {
+      "text": "He was done and you could see it in his eyes. Not too far away from getting flatlined. Great stoppage.",
+      "gold": "hot_take",
+      "predicted": "informative"
+    },
+    {
+      "text": "He wasn't even dodging that well, Garcias misses we because he anticipating benn trying to dogge and instead benn was just keeping his head in the same place.\nI think the ref and garcia realized that at the same time and it was the right call to end it before the damage took hold.",
+      "gold": "hot_take",
+      "predicted": "informative"
+    },
+    {
+      "text": "Garcia was throwing so much heat that Benn charging in like that was only gonna find himself getting hit by something massive eventually. His chin is very good but Garcia is so explosive and fast. Definitely want to see how the later rounds may have played out. Looked like Benn's small clinches after the drop helped him recover and he slipped the last two strikes.\nI still think Garcia would have KO'd him in the very next round but he could have also gassed after the insane pace",
+      "gold": "hot_take",
+      "predicted": "informative"
+    },
+    {
+      "text": "3 years at 38-41 can be a massive difference in physical prowess for a sport like boxing",
+      "gold": "hot_take",
+      "predicted": "informative"
+    },
+    {
+      "text": "Yeh my coach always says if you need to lunge on your jab you're fucked",
+      "gold": "hot_take",
+      "predicted": "informative"
+    },
+    {
+      "text": "\ud83d\udc4d\ud83d\udc8b right back at you bro \ud83d\udc4a\ud83d\ude0e",
+      "gold": "humorous",
+      "predicted": "informative"
+    },
+    {
+      "text": "weirdly objectifying first sentence about a woman you supposedly respect...but okay \ud83d\ude2d",
+      "gold": "hot_take",
+      "predicted": "offensive"
+    },
+    {
+      "text": "Gimme some of that face to face shit boy\nThat right hand to end the fight was absolutely perfect",
+      "gold": "hot_take",
+      "predicted": "informative"
+    },
+    {
+      "text": "I know he was a boxer, but was he too thick to check his own account?",
+      "gold": "hot_take",
+      "predicted": "hot_take"
+    },
+    {
+      "text": "Jesus. By the third right punch, Ryan had figured out his timing and distance. That's a weak defense, and poor coaching.",
+      "gold": "hot_take",
+      "predicted": "informative"
+    },
+    {
+      "text": "A few points:\nDamn what a punch\nUndefeated Wilder has one of the nicest intros\nDid Deontay ever dropped someone with the left?",
+      "gold": "hot_take",
+      "predicted": "informative"
+    },
+    {
+      "text": "Lmao, you mean Ricky hid it away from his dad because his dad shouldn't get shit.\nFell out with his dad for years for stealing, and his dad was the reason he split with his trainer.",
+      "gold": "informative",
+      "predicted": "informative"
+    },
+    {
+      "text": "Yes but it's still not his money and is not open for the estate to distribute.\nFrom what I understand about the clingons he likely kept his money there to stop people taking it.",
+      "gold": "hot_take",
+      "predicted": "informative"
+    }
+  ]
+}
