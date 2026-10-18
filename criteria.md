@@ -54,10 +54,12 @@ whether you hit them:
 ## 1.
 
 <!-- Your criterion. It must name a number. -->
+The model must have an overall accuracy of at least .80 on the held-out test set, on all three seeds.
 
 
 
 **Why this target:**
+With four labels, random guessing gets about 25%, so 0.80 has to come from the model actually learning the labels. I think it can because most boundaries have a clear marker: `informative` needs a fact you could check publicly, `humorous` posts are usually just a joke or "LMAO", and `offensive` needs an insult aimed at someone. Most of the misses should come from the anecdote posts between `hot_take` and `informative`, which is why I didn't go higher than 0.80.
 
 
 
@@ -66,11 +68,13 @@ whether you hit them:
 ## 2.
 
 <!-- Your criterion. -->
+The biggest label is at most 50% of posts.
+
 
 
 
 **Why this target:**
-
+Most r/boxing comments are opinions about fighters, so `hot_take` will probably be my biggest label. Capping it at 50% keeps the other half of the posts for `informative`, `humorous` and `offensive`, so they each get enough training examples. It also means a model that always guesses `hot_take` could score at most 0.50, well below my 0.80 target in #1.
 
 
 ---
@@ -78,10 +82,11 @@ whether you hit them:
 ## 3.
 
 <!-- Your criterion. -->
-
+The labeller should be consistent and if someone else labeled the same posts, you should agree 90% of the time.
 
 
 **Why this target:**
+I wrote decision rules for my two hardest boundaries (personal stories with numbers are `hot_take`, and swearing alone isn't `offensive`), so someone using my definitions should land on the same label for most posts. The disagreements I expect are jokes that also mock a fighter, which sit between `humorous` and `hot_take` and don't have a rule yet. That's why I set it at 90% and not higher.
 
 
 
@@ -90,10 +95,11 @@ whether you hit them:
 ## 4.
 
 <!-- Your criterion. -->
-
+On the held-out test set, predictions with confidence > 0.90 are right at least 90% of the time, and at least 80 points more often than predictions below that cutoff.
 
 
 **Why this target:**
+Confidence should have a high cutoff such as .90 if confident, if unsure then .60 right on all checks is a better check.
 
 
 
@@ -102,11 +108,11 @@ whether you hit them:
 ## 5.
 
 <!-- Your criterion. -->
-
+On the held-out test set, `hot_take` F1 >= 0.50, and `informative`, `humorous` and `offensive` each have F1 >= 0.80, on all three seeds.
 
 
 **Why this target:**
-
+`hot_take` shares a boundary with all three other labels: anecdote posts with numbers look `informative`, opinions with swearing look `offensive` even though swearing alone doesn't count, and jokes that mock a fighter look `humorous`. Since it's the label the model is most likely to confuse with the others, I'm allowing it a lower F1 than the rest.
 
 
 ---
