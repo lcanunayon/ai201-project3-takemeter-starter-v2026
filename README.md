@@ -164,7 +164,7 @@ I labelled the first 20 posts cold, on my own with no tools, using only my defin
 >
 > *Could have been:* `hot_take` or `informative`
 >
-> *I chose, because:* `informative`, because it talks about the users own case for another topic, and the reasons for it. Making it an informative post.
+> *I chose, because:* `informative`, because the Dubai fight Hatton was training for is a checkable public fact, and it's the reason the poster gives for money trouble.
 
 **2.**
 > *The post:* Yeah bro he was so special, knocking out every can fighter he stepped in the ring with. What a legend, I will never forget when he knocked out Herndon...
