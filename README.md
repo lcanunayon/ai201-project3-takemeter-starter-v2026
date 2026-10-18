@@ -98,7 +98,18 @@ A post that insults or attacks a person or group. Swearing just for emphasis doe
 > I fucking hate ryan garcia
 
 **Example 2:**
-> TODO: second real offensive post from your reading
+> Hrgovic is fuckin hilarious man. I love his heart and mentality. But let’s be honest. He’s a fuckin shit boxer.
+> Telegraphed and slow as fuck.
+>
+> Dubois runs through him.
+>
+> Fuck it, even old fury would give Hrgovic a hammering.
+>
+> I just wish fury would have the balls to fight Dubois but we know that won’t happen.
+>
+> Fury gonna beat Joshua and retire.
+>
+> Then it’s King Daniel
 
 ### The hardest boundary
 
