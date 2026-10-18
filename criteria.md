@@ -101,7 +101,7 @@ For unsure confidence predictions, labelling should be right 70% of the time sti
 
 
 **Why this target:**
-Confidence should have a high cutoff such as .90 if confident.
+Confidence should have a high cutoff such as .90 if confident. Unsure should be right 70% of the time because it is well above random guessing 25% accuracy rate with four labels.
 
 
 
