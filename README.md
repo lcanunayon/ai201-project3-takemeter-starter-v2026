@@ -227,9 +227,9 @@ Three labels have fewer than 8 examples in the test split: `informative` (5), `h
 
 **Moment 2**
 
-- *What I asked for: Help with criteria writing after I wrote my own.*
-- *What came back: Ideas for F1 acceptance in order to test my model.*
-- *What I changed: I changed some of the F1 numbers to match what I wanted, and it worked well.*
+- *What I asked for:* Feedback on my five acceptance criteria after I wrote them: could someone else check each one without asking me what I meant?
+- *What came back:* Criteria 2, 4 and 5 couldn't be checked. #2 said ".50 lopsided" without saying what that meant, #4 mixed up confidence and accuracy, and #5 had no number. It also said most of my reasons ("the labels are differentiated") could fit any project. Later I asked it to rewrite my reasons for criteria 1–3 and fix #5, and it did.
+- *What I changed:* I rewrote #2, #4 and #5 myself until each named a number someone could check, and I kept all my own target numbers. When it pointed out that my #4 required unsure predictions to be right 10% of the time or less while also needing them right 70% of the time, I removed the contradiction. The reasons under #1–3 and #5 are its wording.
 
 **Pre-labelling disclosure:**
 I labelled 20 of the 200 posts in `labels.csv` cold, on my own (`note` = `cold`). The other 180 were pre-labelled by Claude (Claude Code), given my four definitions and decision rules. I read them and accepted the labels (`note` = `pre-labelled, checked`). I labelled all 30 staff posts in `my_staff_labels.csv` myself, with no AI suggestions.
