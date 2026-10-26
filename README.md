@@ -285,24 +285,44 @@ Bare label names beat my definitions as a prompt.
 <!-- Five criteria across three seeds. The notebook's section 6 prints the
      spread table; the Target and Verdict columns are yours. -->
 
+Trained on **`cpu`** (Intel Core i9-12900K, PyTorch 2.14.1+cpu), all three seeds. Defaults: 3 epochs, lr 2e-5, batch 16, max length 128.
+
 | Criterion | Target | Seed 42 | Seed 7 | Seed 2024 | Verdict |
 |---|---|---|---|---|---|
-| 1.  |  |  |  |  |  |
-| 2.  |  |  |  |  |  |
-| 3.  |  |  |  |  |  |
-| 4.  |  |  |  |  |  |
-| 5.  |  |  |  |  |  |
+| 1. Overall accuracy | ≥ 0.80 | 0.600 | 0.600 | 0.600 |  |
+| 2. Biggest label share | ≤ 50% of posts | `hot_take` 60% (120/200; 18/30 in test) | 60% (18/30 in test) | 60% (18/30 in test) |  |
+| 3. Agreement with another labeller | ≥ 90% | not measured by training; see Agreement Report | — | — |  |
+| 4. Confident > 0.90 right ≥ 90%; unsure right ≥ 70% | 90% / 70% | most-sure third 0.80, least-sure third 0.30; mean confidence 0.48 | 1.00 / 0.30; mean 0.47 | 0.50 / 0.50; mean 0.46 |  |
+| 5. F1 `hot_take` ≥ 0.50; others ≥ 0.80 | 0.50 / 0.80 | `hot_take` 0.750; `informative`, `humorous`, `offensive` 0.000 | same | same |  |
+
+`results.json` reports confidence by thirds (10 posts each) and mean confidence, not a 0.90 cutoff, so criterion 4 can't be read exactly as written. With four labels, a mean confidence under 0.5 means the model was rarely, if ever, above 0.90.
+
+**Spread across seeds** (notebook section 6):
+
+| Measure | Seed 42 | Seed 7 | Seed 2024 | Spread |
+|---|---|---|---|---|
+| Overall accuracy | 0.600 | 0.600 | 0.600 | 0.000 |
+| Macro F1 | 0.188 | 0.188 | 0.188 | 0.000 |
+| F1 — `hot_take` | 0.750 | 0.750 | 0.750 | 0.000 |
+| F1 — `informative` | 0.000 | 0.000 | 0.000 | 0.000 |
+| F1 — `humorous` | 0.000 | 0.000 | 0.000 | 0.000 |
+| F1 — `offensive` | 0.000 | 0.000 | 0.000 | 0.000 |
+
+The spread is zero, but that isn't stability. On every seed the model predicted `hot_take` for all 30 test posts, and the stratified split always puts 18 `hot_take` posts in a 30-post test set, so every seed gets the same 0.600.
 
 ### Confusion matrix
 
 <!-- ⚠️ TYPED AS A MARKDOWN TABLE. The notebook prints one ready to paste.
      An image of a matrix earns nothing. -->
 
-| true \ predicted |  |  |  |
-|---|---|---|---|
-| **** |  |  |  |
-| **** |  |  |  |
-| **** |  |  |  |
+Seed 42 (seeds 7 and 2024 are identical):
+
+| true \ predicted | hot_take | informative | humorous | offensive |
+|---|---|---|---|---|
+| **hot_take** | 18 | 0 | 0 | 0 |
+| **informative** | 5 | 0 | 0 | 0 |
+| **humorous** | 6 | 0 | 0 | 0 |
+| **offensive** | 1 | 0 | 0 | 0 |
 
 **My biggest off-diagonal number, and what it means:**
 <!-- Not "the model made mistakes" — WHICH boundary it didn't learn, and which
