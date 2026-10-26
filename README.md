@@ -247,14 +247,30 @@ Three labels have fewer than 8 examples in the test split: `informative` (5), `h
 
 | Measure | Baseline | Trained | Difference |
 |---|---|---|---|
-| Overall accuracy |  |  |  |
-| Macro F1 |  |  |  |
-| F1 — `label_one` |  |  |  |
-| F1 — `label_two` |  |  |  |
+| Overall accuracy | 0.233 | 0.600 | +0.367 |
+| Macro F1 | 0.128 | 0.188 | +0.059 |
+| F1 — `hot_take` | 0.190 | 0.750 | +0.560 |
+| F1 — `humorous` | 0.000 | 0.000 | +0.000 |
+| F1 — `informative` | 0.323 | 0.000 | -0.323 |
+| F1 — `offensive` | 0.000 | 0.000 | +0.000 |
+
+Baseline is `facebook/bart-large-mnli` zero-shot, prompted with my definitions from `label_definitions.txt`, scored on the same 30 posts in `test_split.csv` as the trained model (seed 42, cpu).
+
+**Same baseline with bare label names instead of my definitions** (`baseline_bare_names.json`):
+
+| Measure | Bare names | With my definitions |
+|---|---|---|
+| Overall accuracy | 0.467 | 0.233 |
+| Macro F1 | 0.356 | 0.128 |
+| F1 — `hot_take` | 0.600 | 0.190 |
+| F1 — `humorous` | 0.600 | 0.000 |
+| F1 — `informative` | 0.222 | 0.323 |
+| F1 — `offensive` | 0.000 | 0.000 |
 
 **What I predicted before I looked:**
 <!-- Milestone 1 asks you to write this BEFORE seeing the trained numbers. A
      prediction made afterwards isn't one. -->
+I already seen the trained runs numbers, but I predict the trained model will beat the baseline on hot_take and overall accuracy, and loses to it on informative.
 
 **What the gap actually means:**
 <!-- If the baseline matched your trained model, your fine-tuning added
