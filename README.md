@@ -328,6 +328,8 @@ Seed 42 (seeds 7 and 2024 are identical):
 <!-- Not "the model made mistakes" — WHICH boundary it didn't learn, and which
      direction. "7 real analysis posts were called hot_take and only 3 went the
      other way" is a direction, not just an error rate. -->
+6 real `humorous` posts were called `hot_take`, and 0 real `hot_take` posts were called `humorous`. The model never learned the `humorous` vs `hot_take` boundary, so it always resolved toward `hot_take`.
+
 
 
 
