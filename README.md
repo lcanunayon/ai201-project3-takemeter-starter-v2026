@@ -232,6 +232,15 @@ Three labels have fewer than 8 examples in the test split: `informative` (5), `h
 - *What I changed: I changed some of the F1 numbers to match what I wanted, and it worked well.*
 
 **Pre-labelling disclosure:**
+I labelled 20 of the 200 posts in `labels.csv` cold, on my own (`note` = `cold`). The other 180 were pre-labelled by Claude (Claude Code), given my four definitions and decision rules. I read them and accepted the labels (`note` = `pre-labelled, checked`). I labelled all 30 staff posts in `my_staff_labels.csv` myself, with no AI suggestions.
+
+**Other AI use, so it's all disclosed.** I used Claude (Claude Code) throughout this project:
+- **Data prep.** It wrote the script that stripped Reddit page clutter from my copy-pasted threads and turned them into `labels.csv`, and the labelling sheets I filled in.
+- **Running things.** It ran the notebook (sections 1–7), `baseline.py` (with and without my definitions) and `test.py`, and made the commits.
+- **Writing it drafted from my results, which I read:** the reasons under criteria 1, 2, 3 and 5 in `criteria.md`; this README's Dataset section (apart from my hard-case reasons), Training Run, Run Logs, Verdicts and Diagnoses, the Agreement Report disclaimers, The Improvement, and What's Still Broken.
+- **Its suggestions I took:** tightening my label definitions and decision rules in unit 5, and the improvement (10 epochs). I chose 10 epochs out of three options it laid out.
+- **Spotting error patterns.** It pointed out that the before run's zero spread across seeds wasn't stability: the model was guessing `hot_take` for every post. It also noticed that bare label names beat my definitions as a baseline prompt.
+- **What I wrote myself:** my label taxonomy and examples, the decision rules' choices (anecdotes are `hot_take`, swearing alone isn't `offensive`, insults beat hot takes), the criteria themselves and their numbers, the 20 cold labels, the 30 staff labels, my hard-case reasons, my baseline prediction, and the biggest-confusion sentence.
 
 <!-- ═══════════════════════ UNIT 6 — THE TEST ═══════════════════════
 
@@ -463,13 +472,19 @@ The numbers are also no longer stable. Accuracy now moves 0.133 across seeds and
 
 <!-- For each criterion still missed: what you'd do, and why you stopped. -->
 
+Every criterion that was measured is still MISSED after the improvement.
 
+- **1. Overall accuracy ≥ 0.80** (after: 0.700 / 0.767 / 0.633). **What I'd do:** collect about 30 more `informative` and `offensive` posts. Those two labels are still 0.000 F1 and are where the remaining errors are, since every `informative` test post goes to `hot_take`. **Why I stopped:** the milestone allows one change per run, and I used it on training length because that's what my diagnosis pointed at. Collecting more posts means copying another batch from Reddit and labelling it, which I didn't do.
+- **2. Biggest label ≤ 50%** (`hot_take` 60%). **What I'd do:** two things. Collect posts from threads that produce insults and fact-based posts, like "most overrated" threads and stats or records threads. And stop using `hot_take` as the default for questions, bare reactions and off-topic replies, either by leaving those posts out or by giving them their own label. **Why I stopped:** both mean changing the dataset, and my one change went to training.
+- **3. Agreement ≥ 90%** (not measured). **What I'd do:** get `data/staff_labels.csv` and run `python agreement.py` against my committed `my_staff_labels.csv`. **Why I stopped:** I couldn't get the staff file.
+- **4. Confidence** (after: least-sure third 0.60 / 0.70 / 0.50). **What I'd do:** first, revise the criterion so it matches what the notebook measures (thirds, not a 0.90 cutoff). Then add data, because a model this unsure about most posts won't separate confident from unsure guesses well. **Why I stopped:** I only got as far as noting the measurement problem.
+- **5. Per-label F1** (`informative` and `offensive` 0.000 on every seed). **What I'd do:** add examples of both. `offensive` has 6 training posts and 1 test post, so its F1 can only be 0 or 1. `informative` may also be a task the model can't reach from this data, for the reason below. **Why I stopped:** same as criterion 1.
 
 **The gap between what I meant my labels to capture and what the model
 learned:**
 <!-- Two sentences. Your confusion matrix is the evidence. -->
 
-
+I meant `informative` to capture whether a post contains a fact you could check from a public source. But the model called all 5 `informative` test posts `hot_take` on every seed, before and after the improvement, so it never learned that checkability isn't visible in the wording of a post. What it did learn, at 10 epochs, is surface style: posts with "LMAO", emojis and joke phrasing become `humorous`, and everything else becomes `hot_take`, which is why `humorous` is the only thin label it ever gets right.
 
 <!-- ═════════════════════════════════════════════════════════════════════
 
