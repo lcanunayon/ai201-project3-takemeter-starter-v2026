@@ -291,7 +291,7 @@ Trained on **`cpu`** (Intel Core i9-12900K, PyTorch 2.14.1+cpu), all three seeds
 |---|---|---|---|---|---|
 | 1. Overall accuracy | ≥ 0.80 | 0.600 | 0.600 | 0.600 | MISSED |
 | 2. Biggest label share | ≤ 50% of posts | `hot_take` 60% (120/200; 18/30 in test) | 60% (18/30 in test) | 60% (18/30 in test) | MISSED |
-| 3. Agreement with another labeller | ≥ 90% | not measured by training; see Agreement Report | — | — | Pending agreement check |
+| 3. Agreement with another labeller | ≥ 90% | not measured: staff labels unavailable (see Agreement Report) | — | — | NOT MEASURED |
 | 4. Confident > 0.90 right ≥ 90%; unsure right ≥ 70% | 90% / 70% | most-sure third 0.80, least-sure third 0.30; mean confidence 0.48 | 1.00 / 0.30; mean 0.47 | 0.50 / 0.50; mean 0.46 | MISSED |
 | 5. F1 `hot_take` ≥ 0.50; others ≥ 0.80 | 0.50 / 0.80 | `hot_take` 0.750; `informative`, `humorous`, `offensive` 0.000 | same | same | MISSED |
 
@@ -344,7 +344,7 @@ Seed 42 (seeds 7 and 2024 are identical):
 |---|---|---|---|---|
 | 1 | Overall accuracy on the held-out test set | ≥ 0.80 on all three seeds | MISSED | 0.600 on all three seeds (42, 7, 2024), below 0.80 on every one. |
 | 2 | Biggest label share | ≤ 50% of posts | MISSED | `hot_take` is 120 of 200 posts (60%), and 18 of 30 in every test split. |
-| 3 | Agreement with another labeller | ≥ 90% | Pending | Not a training number. Decided by the agreement check against the staff set. |
+| 3 | Agreement with another labeller | ≥ 90% | NOT MEASURED | Decided by the agreement check against the staff set, and I couldn't run it because I didn't have `data/staff_labels.csv`. No number, so no MET or MISSED. |
 | 4 | Confident (> 0.90) right ≥ 90%; unsure right ≥ 70% | 90% / 70% | MISSED | The least-sure third was right 0.30, 0.30 and 0.50 of the time, below 70% on every seed. The 0.90 cutoff itself can't be read from `results.json`, which reports thirds. |
 | 5 | F1 `hot_take` ≥ 0.50; `informative`, `humorous`, `offensive` ≥ 0.80 | 0.50 / 0.80 | MISSED | `hot_take` 0.750 passes, but the other three are 0.000 on all three seeds. |
 
@@ -366,7 +366,7 @@ Seed 42 (seeds 7 and 2024 are identical):
 - **Cause 2: `hot_take` is a catch-all, a labelling problem (criteria 2, 5).** At least 16 posts are `hot_take` only because no other label fit: questions, bare reactions ("Depressing stuff"), off-topic replies about families and wrestling. My notes flag them as "no label fits well" or "off-topic". That makes `hot_take` both the biggest label and the vaguest one, so it has no single pattern for the model to learn and it absorbs everything else.
 - **This isn't a task the model can't reach.** The zero-shot baseline, given only bare label names, got `humorous` F1 0.600 on the same posts. So the humour in these posts can be detected from the text. My trained model's 0.000 comes from the data and the short training, not from humour being invisible.
 - **Criterion 4 (confidence).** Mean confidence was 0.46 to 0.48 on every seed, which is barely above a four-way coin flip (0.25) and nowhere near 0.90. A model that always gives the same answer isn't confident about any post, so the confident and unsure groups don't mean much here. The criterion is also partly unmeasurable as written, because the notebook reports thirds rather than a 0.90 cutoff.
-- **Still to check with the agreement report.** If my agreement with staff is low on the `hot_take` boundaries, Cause 2 is confirmed as a labelling problem, not only a data-size problem. I'll update this once the agreement check is done.
+- **Not confirmed by the agreement report.** The agreement check is the only thing that could show whether Cause 2 is a labelling problem rather than only a data-size problem, and I couldn't run it (see Agreement Report). So Cause 2 rests on my own labelling notes (the 16 posts flagged "no label fits well" or "off-topic") and on the confusion matrix, not on outside evidence. Cause 1 doesn't depend on the agreement check.
 
 
 
@@ -380,49 +380,20 @@ Seed 42 (seeds 7 and 2024 are identical):
      data/staff_taxonomy.md, not your own — so every argument below is made
      from those definitions and those decision rules. -->
 
-**Agreement rate:** ___ / 30 = ___%
+**Agreement rate:** not computed. I wasn't able to get `data/staff_labels.csv` from my TF, so there was nothing to compare my labels against.
 
-<!-- Nobody grades this number. A 60% who argues every disagreement from the
-     stated rules beats a 95% who wrote "staff was right" nine times. Several
-     of the 30 were chosen because they're genuinely ambiguous — you should be
-     winning some of these. -->
+**What I did do:** I read `data/staff_taxonomy.md` and labelled all 30 posts in `data/staff_posts.csv` under the staff definitions and decision rules, not my own. My labels are in `my_staff_labels.csv` (12 `reaction`, 12 `hot_take`, 6 `analysis`), committed before I had any answer key (commit `1c20bd0`).
 
-**Disagreements**
+**What's missing because of that:**
+- No agreement rate, and no `agreement_results.json`. `agreement.py` needs the staff labels and stops without them. I didn't make up a staff file or a rate.
+- No disagreements to adjudicate, so there are no pile (a)/(b)/(c) calls below.
+- Criterion 3 (≥ 90% agreement) is NOT MEASURED, not MET or MISSED.
+- My diagnosis of `hot_take` as a catch-all (Cause 2) can't be checked against an outside labeller.
 
-<!-- Three lines each: the post, both labels, and who you think is right and
-     why — grounded in the staff definitions you were both applying.
-
-     Then sort each into one of three piles:
-       (a) the rule covered it and I applied it loosely → a consistency problem
-       (b) the rule genuinely doesn't say               → a gap in the definitions
-       (c) the rule is ambiguous here and my reading is defensible → argue it.
-           This is a legitimate win.
-
-     Pile (a) is the one that matters most for your diagnosis: if you applied a
-     written rule two different ways on 30 posts, that is direct evidence about
-     what you did across your own 200. -->
-
-**1.**
-> *The post:*
->
-> *Staff said / I said:*
->
-> *My call, and why:*
->
-> *Which pile:*
-
-**2.**
-> *The post:*
->
-> *Staff said / I said:*
->
-> *My call, and why:*
->
-> *Which pile:*
+If I get the staff labels later, running `python agreement.py` with my committed `my_staff_labels.csv` will produce the rate and the disagreement list without relabelling anything.
 
 **What the pattern in my disagreements tells me:**
-
-
+Nothing yet, since there were no disagreements to look at. The one thing my own 30 labels show is that I used all three staff labels, with `analysis` the least common (6 of 30). I can't tell whether that matches staff or means I was strict about rule 1 (the fact has to carry the argument).
 
 ---
 
