@@ -400,27 +400,64 @@ Nothing yet, since there were no disagreements to look at. The one thing my own 
 ## The Improvement
 
 **What I changed:**
+One training setting: `EPOCHS` from 3 to 10. Everything else is the same: same `labels.csv`, same three seeds (42, 7, 2024), learning rate 2e-5, batch size 16, max length 128, `distilbert-base-uncased`, trained on `cpu`. Results are in `results_three_seeds_after.json`.
 
 **Which diagnosis pointed at it:**
+Cause 1. In the before run, validation accuracy was 0.613 after every epoch, exactly the `hot_take` share of the validation split, and training loss only fell from about 1.32 to 1.16. Three epochs on 139 posts is only 27 training steps, and the model settled on "always `hot_take`" in epoch 1 and never moved. That pointed at training length rather than at the labels. I didn't pick a data fix because I couldn't run the agreement check to show a boundary was labelled inconsistently.
 
 ### Run Log — After
 
+Trained on **`cpu`** (Intel Core i9-12900K, PyTorch 2.14.1+cpu), all three seeds. 10 epochs, everything else unchanged.
+
 | Criterion | Target | Seed 42 | Seed 7 | Seed 2024 | Verdict |
 |---|---|---|---|---|---|
-| 1.  |  |  |  |  |  |
-| 2.  |  |  |  |  |  |
-| 3.  |  |  |  |  |  |
-| 4.  |  |  |  |  |  |
-| 5.  |  |  |  |  |  |
+| 1. Overall accuracy | ≥ 0.80 | 0.700 | 0.767 | 0.633 | MISSED |
+| 2. Biggest label share | ≤ 50% of posts | `hot_take` 60% (120/200; 18/30 in test) | 60% | 60% | MISSED |
+| 3. Agreement with another labeller | ≥ 90% | not measured: staff labels unavailable | — | — | NOT MEASURED |
+| 4. Confident > 0.90 right ≥ 90%; unsure right ≥ 70% | 90% / 70% | most-sure third 0.80, least-sure third 0.60 | 1.00 / 0.70 | 0.70 / 0.50 | MISSED |
+| 5. F1 `hot_take` ≥ 0.50; others ≥ 0.80 | 0.50 / 0.80 | `hot_take` 0.791, `humorous` 0.727, `informative` 0.000, `offensive` 0.000 | 0.837 / 0.909 / 0.000 / 0.000 | 0.766 / 0.286 / 0.000 / 0.000 | MISSED |
+
+**Spread across seeds** (notebook section 6):
+
+| Measure | Seed 42 | Seed 7 | Seed 2024 | Spread |
+|---|---|---|---|---|
+| Overall accuracy | 0.700 | 0.767 | 0.633 | 0.133 |
+| Macro F1 | 0.379 | 0.437 | 0.263 | 0.174 |
+| F1 — `hot_take` | 0.791 | 0.837 | 0.766 | 0.071 |
+| F1 — `informative` | 0.000 | 0.000 | 0.000 | 0.000 |
+| F1 — `humorous` | 0.727 | 0.909 | 0.286 | 0.623 |
+| F1 — `offensive` | 0.000 | 0.000 | 0.000 | 0.000 |
+
+**Confusion matrix, after** (seed 42):
+
+| true \ predicted | hot_take | informative | humorous | offensive |
+|---|---|---|---|---|
+| **hot_take** | 17 | 0 | 1 | 0 |
+| **informative** | 5 | 0 | 0 | 0 |
+| **humorous** | 2 | 0 | 4 | 0 |
+| **offensive** | 1 | 0 | 0 | 0 |
+
+**Before and after, side by side:**
+
+| Measure | Before (3 epochs), seeds 42 / 7 / 2024 | After (10 epochs), seeds 42 / 7 / 2024 |
+|---|---|---|
+| Overall accuracy | 0.600 / 0.600 / 0.600 | 0.700 / 0.767 / 0.633 |
+| Macro F1 | 0.188 / 0.188 / 0.188 | 0.379 / 0.437 / 0.263 |
+| F1 — `hot_take` | 0.750 / 0.750 / 0.750 | 0.791 / 0.837 / 0.766 |
+| F1 — `humorous` | 0.000 / 0.000 / 0.000 | 0.727 / 0.909 / 0.286 |
+| F1 — `informative` | 0.000 / 0.000 / 0.000 | 0.000 / 0.000 / 0.000 |
+| F1 — `offensive` | 0.000 / 0.000 / 0.000 | 0.000 / 0.000 / 0.000 |
 
 **Did it help, and how do I know:**
 
 <!-- If it didn't, say so. Relabelling that didn't help is a genuinely
      interesting result and earns full credit. -->
 
+Yes, partly. Accuracy went up on every seed (+0.100, +0.167, +0.033) and macro F1 roughly doubled. The model stopped guessing `hot_take` for everything: it learned `humorous`, with F1 0.727 and 0.909 on two seeds where before it was 0.000 on all three. But it didn't move any criterion from MISSED to MET. Accuracy still tops out at 0.767, against a target of 0.80.
 
+Two labels didn't move at all. Every real `informative` post was still called `hot_take` on all three seeds (5 of 5 each time), and the single `offensive` test post was missed every time. So the extra training let the model learn the one thin label with the most training examples and clear surface cues ("LMAO", emojis), but not the two that need more than that.
 
----
+The numbers are also no longer stable. Accuracy now moves 0.133 across seeds and `humorous` F1 swings from 0.286 to 0.909. With only 6 `humorous` posts in each test split, one or two posts landing differently changes the score a lot, which is the small-dataset problem from Cause 1 showing up now that the model predicts more than one label.
 
 ## What's Still Broken
 
