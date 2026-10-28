@@ -237,7 +237,7 @@ I labelled 20 of the 200 posts in `labels.csv` cold, on my own (`note` = `cold`)
 **Other AI use, so it's all disclosed.** I used Claude (Claude Code) throughout this project:
 - **Data prep.** It wrote the script that stripped Reddit page clutter from my copy-pasted threads and turned them into `labels.csv`, and the labelling sheets I filled in.
 - **Running things.** It ran the notebook (sections 1–7), `baseline.py` (with and without my definitions), `agreement.py` and `test.py`, and made the commits.
-- **Writing it drafted from my results, which I read:** the reasons under criteria 1, 2, 3 and 5 in `criteria.md`; this README's Dataset section (apart from my hard-case reasons), Training Run, Run Logs, Verdicts and Diagnoses, the Agreement Report's rate, table, post blocks and pattern paragraph (not my calls or piles), The Improvement, and What's Still Broken.
+- **Writing it drafted from my results, which I read:** the reasons under criteria 1, 2, 3 and 5 in `criteria.md`; this README's Dataset section (apart from my hard-case reasons), Training Run, Run Logs, Verdicts and Diagnoses, the Agreement Report's rate, table, post blocks and pattern paragraph. I chose every pile myself and wrote first drafts of the calls arguing my own label each time; Claude then reworded the calls so each one says who is right, matching my pile, and cites the staff rule, The Improvement, and What's Still Broken.
 - **Its suggestions I took:** tightening my label definitions and decision rules in unit 5, and the improvement (10 epochs). I chose 10 epochs out of three options it laid out.
 - **Spotting error patterns.** It pointed out that the before run's zero spread across seeds wasn't stability: the model was guessing `hot_take` for every post. It also noticed that bare label names beat my definitions as a baseline prompt.
 - **What I wrote myself:** my label taxonomy and examples, the decision rules' choices (anecdotes are `hot_take`, swearing alone isn't `offensive`, insults beat hot takes), the criteria themselves and their numbers, the 20 cold labels, the 30 staff labels, my hard-case reasons, my baseline prediction, and the biggest-confusion sentence.
@@ -424,90 +424,90 @@ I labelled the 30 staff posts under the staff taxonomy in `data/staff_taxonomy.m
 >
 > *Staff said / I said:* Staff said `analysis` / I said `reaction`
 >
-> *My call, and why:* TODO
+> *My call, and why:* Staff is right. I read it as a `reaction` to how much the times moved, but nothing here is about the writer's own race or feelings, and rule 3 says recency doesn't outrank evidence. The two checkable numbers (40 seconds at the front, four minutes at 100th place) are the whole argument, so under rule 1 it's `analysis`. I applied rule 1 loosely.
 >
-> *Which pile:* TODO
+> *Which pile:* (a)
 
 **2.**
 > *The post:* The club championship scoring changed in 2019 from top-6 to top-10. Since then our B team has finished above the A team twice. That's not depth improving, it's the scoring rewarding turnout.
 >
 > *Staff said / I said:* Staff said `analysis` / I said `reaction`
 >
-> *My call, and why:* TODO
+> *My call, and why:* Staff is right. I called it a `reaction` because it's about the writer's own club, but rule 2 says a reaction reports what just happened to the writer and how it felt, and this argues a general point instead. A named date (2019), a named rule change (top-6 to top-10) and a result (B team above A team twice) are what the conclusion rests on, so rule 1 makes it `analysis`.
 >
-> *Which pile:* TODO
+> *Which pile:* (a)
 
 **3.**
 > *The post:* Ran the same loop in 4C and in 24C within a fortnight, same effort by heart rate. 90 seconds slower in the heat over six miles. People keep saying heat costs you 'a bit' and it's more than that.
 >
 > *Staff said / I said:* Staff said `analysis` / I said `hot_take`
 >
-> *My call, and why:* TODO
+> *My call, and why:* Staff is right. I focused on the confident last sentence and called it a `hot_take`, but the post gives its support: the same loop at 4C and 24C, same effort, 90 seconds slower. Rule 1 asks whether the fact carries the argument, and here it does. The conclusion ("it's more than a bit") comes from the number, not before it.
 >
-> *Which pile:* TODO
+> *Which pile:* (a)
 
 **4.**
 > *The post:* Went back through the club results going back to 2012. Every single year the number of people who enter the spring marathon and don't start it sits between 18 and 23 percent. It's not a bad-luck year, it's the base rate.
 >
 > *Staff said / I said:* Staff said `analysis` / I said `reaction`
 >
-> *My call, and why:* TODO
+> *My call, and why:* Staff is right. Nothing in the post just happened to the writer, so rule 2's test for `reaction` fails. The 18–23% range across every year since 2012 is used to reject the "bad-luck year" explanation, which is exactly a fact doing work in the argument under rule 1, so it's `analysis`.
 >
-> *Which pile:* TODO
+> *Which pile:* (a)
 
 **5.**
 > *The post:* The 10K route was remeasured in 2021 and came out 60 metres long. Everyone comparing PBs from before and after that is comparing two different races, which is about 12 seconds at club pace.
 >
 > *Staff said / I said:* Staff said `analysis` / I said `hot_take`
 >
-> *My call, and why:* TODO
+> *My call, and why:* Staff is right. I took "everyone comparing PBs is comparing two different races" as an unsupported claim, but it is supported. The 2021 remeasurement and the 60 metres (about 12 seconds) are the reason the claim holds. Under rule 1 that's `analysis`, not a `hot_take`.
 >
-> *Which pile:* TODO
+> *Which pile:* (a)
 
 **6.**
 > *The post:* Three of us ran the same session on the same day, different shoes, within 10 seconds of each other over 5 miles. I'm not saying shoes do nothing, but whatever they do was smaller than the noise between three people.
 >
 > *Staff said / I said:* Staff said `analysis` / I said `hot_take`
 >
-> *My call, and why:* TODO
+> *My call, and why:* Staff is right. I saw an opinion about shoes and called it a `hot_take`, but the writer ran a comparison (three runners, same session, within 10 seconds over 5 miles) and draws a hedged conclusion from it. Rule 1: the fact carries the argument, so it's `analysis`. The hedging ("I'm not saying shoes do nothing") makes it more like analysis, not less.
 >
-> *Which pile:* TODO
+> *Which pile:* (a)
 
 **7.**
 > *The post:* Times are down about 3% since the shoe rules changed, so obviously the shoes are the whole story and the sport has a problem.
 >
 > *Staff said / I said:* Staff said `hot_take` / I said `analysis`
 >
-> *My call, and why:* TODO
+> *My call, and why:* I'd defend `analysis`. "Times are down about 3% since the shoe rules changed" is a checkable fact, and it's the only reason the post gives, joined to the conclusion by "so". Rule 1 says a fact is decoration when the writer had already reached the conclusion, but nothing in the post shows which came first. The staff reading leans on tone ("so obviously", "whole story") to decide that. I accept the conclusion overreaches what 3% can show, which is why this is ambiguous rather than a clear win, but the rule doesn't give a way to tell decoration from a thin reason when the fact is the only support offered.
 >
-> *Which pile:* TODO
+> *Which pile:* (c)
 
 **8.**
 > *The post:* Every injury thread on this forum is the same injury and the same three replies.
 >
 > *Staff said / I said:* Staff said `hot_take` / I said `reaction`
 >
-> *My call, and why:* TODO
+> *My call, and why:* The rules don't settle this one. Rule 2 splits posts into a report of what just happened to the writer (`reaction`) and a general claim about the world (`hot_take`). This post is a general claim ("every injury thread"), but it's about the writer's own repeated experience of reading this forum, not about running or the world outside it, and not about something in the last few hours. I read it as frustration (`reaction`); staff read the "every" as a general claim (`hot_take`). The definitions don't cover an ongoing personal irritation phrased as a generalisation, so I'd call this a gap rather than say either of us applied a rule wrong.
 >
-> *Which pile:* TODO
+> *Which pile:* (b)
 
 **9.**
 > *The post:* First run back after eight weeks out. Two miles, slower than my warm-up used to be, and I don't care even slightly.
 >
 > *Staff said / I said:* Staff said `reaction` / I said `analysis`
 >
-> *My call, and why:* TODO
+> *My call, and why:* Staff is right. I saw numbers (eight weeks, two miles, slower than a warm-up) and called it `analysis`, but nothing is argued from them. They're the news, and "I don't care even slightly" is the feeling. It's the writer's own run, just done, so rule 2 makes it a `reaction`, and rule 3 doesn't turn it into analysis because no fact is load-bearing.
 >
-> *Which pile:* TODO
+> *Which pile:* (a)
 
 **10.**
 > *The post:* Wind was so bad on the out section I was leaning at about 20 degrees. Coming back felt like cheating.
 >
 > *Staff said / I said:* Staff said `reaction` / I said `hot_take`
 >
-> *My call, and why:* TODO
+> *My call, and why:* I'd defend `hot_take`, though it's close. "Leaning at about 20 degrees" isn't a real measurement, it's an exaggerated claim about how strong the wind was, and "felt like cheating" is a judgment about the course rather than a report of what the writer did. Staff read both as the writer describing their own run (rule 2, `reaction`). Rule 2 separates claims about the world from reports about the writer, and here the writer's experience is the evidence for a claim about the conditions, so both readings are defensible.
 >
-> *Which pile:* TODO
+> *Which pile:* (c)
 
 **What the pattern in my disagreements tells me:**
 My disagreements cluster on one boundary. 6 of the 10 are posts staff called `analysis` that I called `reaction` (3) or `hot_take` (3), so I was much stricter than staff about when a fact "carries the argument" (rule 1). Staff had 10 `analysis` posts and I had only 6, and only 4 of those matched. The other two staff labels I mostly agreed on: 8 of 10 for both `hot_take` and `reaction`. This is the same boundary as my own `informative` label, which my model never learned. That suggests my own labelling of checkable facts is part of why: I didn't apply that boundary consistently.
