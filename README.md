@@ -236,8 +236,8 @@ I labelled 20 of the 200 posts in `labels.csv` cold, on my own (`note` = `cold`)
 
 **Other AI use, so it's all disclosed.** I used Claude (Claude Code) throughout this project:
 - **Data prep.** It wrote the script that stripped Reddit page clutter from my copy-pasted threads and turned them into `labels.csv`, and the labelling sheets I filled in.
-- **Running things.** It ran the notebook (sections 1–7), `baseline.py` (with and without my definitions) and `test.py`, and made the commits.
-- **Writing it drafted from my results, which I read:** the reasons under criteria 1, 2, 3 and 5 in `criteria.md`; this README's Dataset section (apart from my hard-case reasons), Training Run, Run Logs, Verdicts and Diagnoses, the Agreement Report disclaimers, The Improvement, and What's Still Broken.
+- **Running things.** It ran the notebook (sections 1–7), `baseline.py` (with and without my definitions), `agreement.py` and `test.py`, and made the commits.
+- **Writing it drafted from my results, which I read:** the reasons under criteria 1, 2, 3 and 5 in `criteria.md`; this README's Dataset section (apart from my hard-case reasons), Training Run, Run Logs, Verdicts and Diagnoses, the Agreement Report's rate, table, post blocks and pattern paragraph (not my calls or piles), The Improvement, and What's Still Broken.
 - **Its suggestions I took:** tightening my label definitions and decision rules in unit 5, and the improvement (10 epochs). I chose 10 epochs out of three options it laid out.
 - **Spotting error patterns.** It pointed out that the before run's zero spread across seeds wasn't stability: the model was guessing `hot_take` for every post. It also noticed that bare label names beat my definitions as a baseline prompt.
 - **What I wrote myself:** my label taxonomy and examples, the decision rules' choices (anecdotes are `hot_take`, swearing alone isn't `offensive`, insults beat hot takes), the criteria themselves and their numbers, the 20 cold labels, the 30 staff labels, my hard-case reasons, my baseline prediction, and the biggest-confusion sentence.
@@ -300,7 +300,7 @@ Trained on **`cpu`** (Intel Core i9-12900K, PyTorch 2.14.1+cpu), all three seeds
 |---|---|---|---|---|---|
 | 1. Overall accuracy | ≥ 0.80 | 0.600 | 0.600 | 0.600 | MISSED |
 | 2. Biggest label share | ≤ 50% of posts | `hot_take` 60% (120/200; 18/30 in test) | 60% (18/30 in test) | 60% (18/30 in test) | MISSED |
-| 3. Agreement with another labeller | ≥ 90% | not measured: staff labels unavailable (see Agreement Report) | — | — | NOT MEASURED |
+| 3. Agreement with another labeller | ≥ 90% | 67% (20/30) vs staff; one measurement, not per seed | — | — | MISSED |
 | 4. Confident > 0.90 right ≥ 90%; unsure right ≥ 70% | 90% / 70% | most-sure third 0.80, least-sure third 0.30; mean confidence 0.48 | 1.00 / 0.30; mean 0.47 | 0.50 / 0.50; mean 0.46 | MISSED |
 | 5. F1 `hot_take` ≥ 0.50; others ≥ 0.80 | 0.50 / 0.80 | `hot_take` 0.750; `informative`, `humorous`, `offensive` 0.000 | same | same | MISSED |
 
@@ -353,7 +353,7 @@ Seed 42 (seeds 7 and 2024 are identical):
 |---|---|---|---|---|
 | 1 | Overall accuracy on the held-out test set | ≥ 0.80 on all three seeds | MISSED | 0.600 on all three seeds (42, 7, 2024), below 0.80 on every one. |
 | 2 | Biggest label share | ≤ 50% of posts | MISSED | `hot_take` is 120 of 200 posts (60%), and 18 of 30 in every test split. |
-| 3 | Agreement with another labeller | ≥ 90% | NOT MEASURED | Decided by the agreement check against the staff set, and I couldn't run it because I didn't have `data/staff_labels.csv`. No number, so no MET or MISSED. |
+| 3 | Agreement with another labeller | ≥ 90% | MISSED | I agreed with staff on 20 of 30 posts (67%) in the agreement check, below 90%. It's one measurement, since it doesn't depend on the seed. |
 | 4 | Confident (> 0.90) right ≥ 90%; unsure right ≥ 70% | 90% / 70% | MISSED | The least-sure third was right 0.30, 0.30 and 0.50 of the time, below 70% on every seed. The 0.90 cutoff itself can't be read from `results.json`, which reports thirds. |
 | 5 | F1 `hot_take` ≥ 0.50; `informative`, `humorous`, `offensive` ≥ 0.80 | 0.50 / 0.80 | MISSED | `hot_take` 0.750 passes, but the other three are 0.000 on all three seeds. |
 
@@ -375,7 +375,7 @@ Seed 42 (seeds 7 and 2024 are identical):
 - **Cause 2: `hot_take` is a catch-all, a labelling problem (criteria 2, 5).** At least 16 posts are `hot_take` only because no other label fit: questions, bare reactions ("Depressing stuff"), off-topic replies about families and wrestling. My notes flag them as "no label fits well" or "off-topic". That makes `hot_take` both the biggest label and the vaguest one, so it has no single pattern for the model to learn and it absorbs everything else.
 - **This isn't a task the model can't reach.** The zero-shot baseline, given only bare label names, got `humorous` F1 0.600 on the same posts. So the humour in these posts can be detected from the text. My trained model's 0.000 comes from the data and the short training, not from humour being invisible.
 - **Criterion 4 (confidence).** Mean confidence was 0.46 to 0.48 on every seed, which is barely above a four-way coin flip (0.25) and nowhere near 0.90. A model that always gives the same answer isn't confident about any post, so the confident and unsure groups don't mean much here. The criterion is also partly unmeasurable as written, because the notebook reports thirds rather than a 0.90 cutoff.
-- **Not confirmed by the agreement report.** The agreement check is the only thing that could show whether Cause 2 is a labelling problem rather than only a data-size problem, and I couldn't run it (see Agreement Report). So Cause 2 rests on my own labelling notes (the 16 posts flagged "no label fits well" or "off-topic") and on the confusion matrix, not on outside evidence. Cause 1 doesn't depend on the agreement check.
+- **What the agreement report shows (criterion 3, and evidence for criterion 5).** I agreed with staff on 20 of 30 posts (67%). 6 of my 10 disagreements are posts staff called `analysis` that I didn't: I called 3 `reaction` and 3 `hot_take`, and matched staff on only 4 of their 10 `analysis` posts. Staff `analysis` is the same idea as my `informative`: a checkable fact that carries the argument. So the boundary where I disagree with an outside labeller most is the boundary of the label my model never learned (`informative` F1 0.000 on every seed). That points at my labelling as part of the cause of the `informative` miss, not only the model. If I under-credit checkable facts on 30 staff posts, I probably did the same across my 200, which gives the model an inconsistent signal for `informative` on top of having only 22 training examples.
 
 
 
@@ -389,20 +389,128 @@ Seed 42 (seeds 7 and 2024 are identical):
      data/staff_taxonomy.md, not your own — so every argument below is made
      from those definitions and those decision rules. -->
 
-**Agreement rate:** not computed. I wasn't able to get `data/staff_labels.csv` from my TF, so there was nothing to compare my labels against.
+**Agreement rate:** 20 / 30 = 67%
 
-**What I did do:** I read `data/staff_taxonomy.md` and labelled all 30 posts in `data/staff_posts.csv` under the staff definitions and decision rules, not my own. My labels are in `my_staff_labels.csv` (12 `reaction`, 12 `hot_take`, 6 `analysis`), committed before I had any answer key (commit `1c20bd0`).
+I labelled the 30 staff posts under the staff taxonomy in `data/staff_taxonomy.md` and committed them in `my_staff_labels.csv` (commit `1c20bd0`) before I had the answer key. I got `data/staff_labels.csv` afterwards and ran `python agreement.py`, which wrote `agreement_results.json`. My labels weren't changed after seeing the key.
 
-**What's missing because of that:**
-- No agreement rate, and no `agreement_results.json`. `agreement.py` needs the staff labels and stops without them. I didn't make up a staff file or a rate.
-- No disagreements to adjudicate, so there are no pile (a)/(b)/(c) calls below.
-- Criterion 3 (≥ 90% agreement) is NOT MEASURED, not MET or MISSED.
-- My diagnosis of `hot_take` as a catch-all (Cause 2) can't be checked against an outside labeller.
+| staff \ me | analysis | hot_take | reaction |
+|---|---|---|---|
+| **analysis** | 4 | 3 | 3 |
+| **hot_take** | 1 | 8 | 1 |
+| **reaction** | 1 | 1 | 8 |
 
-If I get the staff labels later, running `python agreement.py` with my committed `my_staff_labels.csv` will produce the rate and the disagreement list without relabelling anything.
+<!-- Nobody grades this number. A 60% who argues every disagreement from the
+     stated rules beats a 95% who wrote "staff was right" nine times. Several
+     of the 30 were chosen because they're genuinely ambiguous — you should be
+     winning some of these. -->
+
+**Disagreements**
+
+<!-- Three lines each: the post, both labels, and who you think is right and
+     why — grounded in the staff definitions you were both applying.
+
+     Then sort each into one of three piles:
+       (a) the rule covered it and I applied it loosely → a consistency problem
+       (b) the rule genuinely doesn't say               → a gap in the definitions
+       (c) the rule is ambiguous here and my reading is defensible → argue it.
+           This is a legitimate win.
+
+     Pile (a) is the one that matters most for your diagnosis: if you applied a
+     written rule two different ways on 30 posts, that is direct evidence about
+     what you did across your own 200. -->
+
+**1.**
+> *The post:* Pulled the splits from the last five editions. The winning time has moved by 40 seconds total in ten years, but the 100th-place time is four minutes faster. The depth changed, the front didn't.
+>
+> *Staff said / I said:* Staff said `analysis` / I said `reaction`
+>
+> *My call, and why:* TODO
+>
+> *Which pile:* TODO
+
+**2.**
+> *The post:* The club championship scoring changed in 2019 from top-6 to top-10. Since then our B team has finished above the A team twice. That's not depth improving, it's the scoring rewarding turnout.
+>
+> *Staff said / I said:* Staff said `analysis` / I said `reaction`
+>
+> *My call, and why:* TODO
+>
+> *Which pile:* TODO
+
+**3.**
+> *The post:* Ran the same loop in 4C and in 24C within a fortnight, same effort by heart rate. 90 seconds slower in the heat over six miles. People keep saying heat costs you 'a bit' and it's more than that.
+>
+> *Staff said / I said:* Staff said `analysis` / I said `hot_take`
+>
+> *My call, and why:* TODO
+>
+> *Which pile:* TODO
+
+**4.**
+> *The post:* Went back through the club results going back to 2012. Every single year the number of people who enter the spring marathon and don't start it sits between 18 and 23 percent. It's not a bad-luck year, it's the base rate.
+>
+> *Staff said / I said:* Staff said `analysis` / I said `reaction`
+>
+> *My call, and why:* TODO
+>
+> *Which pile:* TODO
+
+**5.**
+> *The post:* The 10K route was remeasured in 2021 and came out 60 metres long. Everyone comparing PBs from before and after that is comparing two different races, which is about 12 seconds at club pace.
+>
+> *Staff said / I said:* Staff said `analysis` / I said `hot_take`
+>
+> *My call, and why:* TODO
+>
+> *Which pile:* TODO
+
+**6.**
+> *The post:* Three of us ran the same session on the same day, different shoes, within 10 seconds of each other over 5 miles. I'm not saying shoes do nothing, but whatever they do was smaller than the noise between three people.
+>
+> *Staff said / I said:* Staff said `analysis` / I said `hot_take`
+>
+> *My call, and why:* TODO
+>
+> *Which pile:* TODO
+
+**7.**
+> *The post:* Times are down about 3% since the shoe rules changed, so obviously the shoes are the whole story and the sport has a problem.
+>
+> *Staff said / I said:* Staff said `hot_take` / I said `analysis`
+>
+> *My call, and why:* TODO
+>
+> *Which pile:* TODO
+
+**8.**
+> *The post:* Every injury thread on this forum is the same injury and the same three replies.
+>
+> *Staff said / I said:* Staff said `hot_take` / I said `reaction`
+>
+> *My call, and why:* TODO
+>
+> *Which pile:* TODO
+
+**9.**
+> *The post:* First run back after eight weeks out. Two miles, slower than my warm-up used to be, and I don't care even slightly.
+>
+> *Staff said / I said:* Staff said `reaction` / I said `analysis`
+>
+> *My call, and why:* TODO
+>
+> *Which pile:* TODO
+
+**10.**
+> *The post:* Wind was so bad on the out section I was leaning at about 20 degrees. Coming back felt like cheating.
+>
+> *Staff said / I said:* Staff said `reaction` / I said `hot_take`
+>
+> *My call, and why:* TODO
+>
+> *Which pile:* TODO
 
 **What the pattern in my disagreements tells me:**
-Nothing yet, since there were no disagreements to look at. The one thing my own 30 labels show is that I used all three staff labels, with `analysis` the least common (6 of 30). I can't tell whether that matches staff or means I was strict about rule 1 (the fact has to carry the argument).
+My disagreements cluster on one boundary. 6 of the 10 are posts staff called `analysis` that I called `reaction` (3) or `hot_take` (3), so I was much stricter than staff about when a fact "carries the argument" (rule 1). Staff had 10 `analysis` posts and I had only 6, and only 4 of those matched. The other two staff labels I mostly agreed on: 8 of 10 for both `hot_take` and `reaction`. This is the same boundary as my own `informative` label, which my model never learned. That suggests my own labelling of checkable facts is part of why: I didn't apply that boundary consistently.
 
 ---
 
@@ -422,7 +530,7 @@ Trained on **`cpu`** (Intel Core i9-12900K, PyTorch 2.14.1+cpu), all three seeds
 |---|---|---|---|---|---|
 | 1. Overall accuracy | ≥ 0.80 | 0.700 | 0.767 | 0.633 | MISSED |
 | 2. Biggest label share | ≤ 50% of posts | `hot_take` 60% (120/200; 18/30 in test) | 60% | 60% | MISSED |
-| 3. Agreement with another labeller | ≥ 90% | not measured: staff labels unavailable | — | — | NOT MEASURED |
+| 3. Agreement with another labeller | ≥ 90% | 67% (20/30), unchanged: training doesn't affect it | — | — | MISSED |
 | 4. Confident > 0.90 right ≥ 90%; unsure right ≥ 70% | 90% / 70% | most-sure third 0.80, least-sure third 0.60 | 1.00 / 0.70 | 0.70 / 0.50 | MISSED |
 | 5. F1 `hot_take` ≥ 0.50; others ≥ 0.80 | 0.50 / 0.80 | `hot_take` 0.791, `humorous` 0.727, `informative` 0.000, `offensive` 0.000 | 0.837 / 0.909 / 0.000 / 0.000 | 0.766 / 0.286 / 0.000 / 0.000 | MISSED |
 
@@ -476,7 +584,7 @@ Every criterion that was measured is still MISSED after the improvement.
 
 - **1. Overall accuracy ≥ 0.80** (after: 0.700 / 0.767 / 0.633). **What I'd do:** collect about 30 more `informative` and `offensive` posts. Those two labels are still 0.000 F1 and are where the remaining errors are, since every `informative` test post goes to `hot_take`. **Why I stopped:** the milestone allows one change per run, and I used it on training length because that's what my diagnosis pointed at. Collecting more posts means copying another batch from Reddit and labelling it, which I didn't do.
 - **2. Biggest label ≤ 50%** (`hot_take` 60%). **What I'd do:** two things. Collect posts from threads that produce insults and fact-based posts, like "most overrated" threads and stats or records threads. And stop using `hot_take` as the default for questions, bare reactions and off-topic replies, either by leaving those posts out or by giving them their own label. **Why I stopped:** both mean changing the dataset, and my one change went to training.
-- **3. Agreement ≥ 90%** (not measured). **What I'd do:** get `data/staff_labels.csv` and run `python agreement.py` against my committed `my_staff_labels.csv`. **Why I stopped:** I couldn't get the staff file.
+- **3. Agreement ≥ 90%** (67%). **What I'd do:** reread rule 1 and go back over the 6 `analysis` posts I missed until I can say why the fact carries each one. Then relabel the `informative` boundary in my own 200 posts the same way and retrain. That's the relabelling improvement this evidence points at. **Why I stopped:** I only got the staff labels after I'd already used my one change on training length.
 - **4. Confidence** (after: least-sure third 0.60 / 0.70 / 0.50). **What I'd do:** first, revise the criterion so it matches what the notebook measures (thirds, not a 0.90 cutoff). Then add data, because a model this unsure about most posts won't separate confident from unsure guesses well. **Why I stopped:** I only got as far as noting the measurement problem.
 - **5. Per-label F1** (`informative` and `offensive` 0.000 on every seed). **What I'd do:** add examples of both. `offensive` has 6 training posts and 1 test post, so its F1 can only be 0 or 1. `informative` may also be a task the model can't reach from this data, for the reason below. **Why I stopped:** same as criterion 1.
 
