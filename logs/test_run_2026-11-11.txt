@@ -1,0 +1,262 @@
+
+##### CELL 2 #####
+device: cpu  (CPU)
+torch:  2.14.1+cpu
+
+⚠️  WRITE THIS DOWN. Your results depend on it.
+
+Two people running this notebook on the same data with the same seed can
+get different numbers, because different hardware does the arithmetic in
+a slightly different order. That is not a bug and it is not one of you
+being wrong — it is a real property of the thing you are building, and
+unit 6 asks you to report it alongside your three seeds.
+##### cell 2 done in 1.6s #####
+
+##### CELL 4 #####
+Working in: C:\Users\delon\AppData\Local\Temp\claude\10c46dd78217b60c\216adee7-39b8-4f6f-bc7d-aab7d8da30a4\scratchpad\tm_run
+[note] not found yet: baseline.py
+       labels.csv is Milestone 4 — that's expected before then.
+##### cell 4 done in 0.0s #####
+
+##### CELL 6 #####
+4 labels: hot_take, informative, humorous, offensive
+seed 42, 10 epochs, lr 2e-05, batch 16
+##### cell 6 done in 0.0s #####
+
+##### CELL 8 #####
+Loaded labels.csv: 200 rows
+Columns: text, label, note
+##### cell 8 done in 0.4s #####
+
+##### CELL 10 #####
+[look at]  Only 8 examples of 'offensive'. Its test split will be tiny, so its F1 will jump around between seeds.
+
+Data looks fine.
+
+label
+hot_take       120
+humorous        40
+informative     32
+offensive        8
+##### cell 10 done in 0.0s #####
+
+##### CELL 12 #####
+train 139  ·  val 31  ·  test 30
+
+             train  val  test
+label                        
+hot_take        83   19    18
+informative     22    5     5
+humorous        28    6     6
+offensive        6    1     1
+
+[note] 'informative' has only 5 examples in the test split.
+[note] 'humorous' has only 6 examples in the test split.
+[note] 'offensive' has only 1 examples in the test split.
+
+A metric computed on that few examples moves a lot between seeds.
+Write that down now — next unit it's a diagnosis, not a surprise.
+##### cell 12 done in 1.0s #####
+
+##### CELL 14 #####
+##### cell 14 done in 3.5s #####
+
+##### CELL 16 #####
+##### cell 16 done in 0.0s #####
+
+##### CELL 19 #####
+
+============================================================
+Seed 42  (1 of 3)
+============================================================
+Some weights of DistilBertForSequenceClassification were not initialized from the model checkpoint at distilbert-base-uncased and are newly initialized: ['classifier.bias', 'classifier.weight', 'pre_classifier.bias', 'pre_classifier.weight']
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+Map:   0%|          | 0/139 [00:00<?, ? examples/s]Map: 100%|██████████| 139/139 [00:00<00:00, 2113.55 examples/s]
+Map:   0%|          | 0/31 [00:00<?, ? examples/s]Map: 100%|██████████| 31/31 [00:00<00:00, 6917.98 examples/s]
+D:\Repositories\ai201-project3-takemeter-starter-v2026\.venv\Lib\site-packages\torch\utils\data\dataloader.py:759: UserWarning: 'pin_memory' argument is set as true but no accelerator is found, then device pinned memory won't be used.
+  super().__init__(loader)
+{'eval_loss': 1.2041285037994385, 'eval_accuracy': 0.6129032258064516, 'eval_f1_macro': 0.19, 'eval_runtime': 0.5931, 'eval_samples_per_second': 52.263, 'eval_steps_per_second': 3.372, 'epoch': 1.0}
+D:\Repositories\ai201-project3-takemeter-starter-v2026\.venv\Lib\site-packages\torch\utils\data\dataloader.py:759: UserWarning: 'pin_memory' argument is set as true but no accelerator is found, then device pinned memory won't be used.
+  super().__init__(loader)
+{'loss': 1.3118, 'grad_norm': 3.1563632488250732, 'learning_rate': 1.8e-05, 'epoch': 1.1111111111111112}
+{'eval_loss': 1.0478804111480713, 'eval_accuracy': 0.6129032258064516, 'eval_f1_macro': 0.19, 'eval_runtime': 0.5701, 'eval_samples_per_second': 54.38, 'eval_steps_per_second': 3.508, 'epoch': 2.0}
+D:\Repositories\ai201-project3-takemeter-starter-v2026\.venv\Lib\site-packages\torch\utils\data\dataloader.py:759: UserWarning: 'pin_memory' argument is set as true but no accelerator is found, then device pinned memory won't be used.
+  super().__init__(loader)
+{'loss': 1.1313, 'grad_norm': 2.7988343238830566, 'learning_rate': 1.577777777777778e-05, 'epoch': 2.2222222222222223}
+{'eval_loss': 0.9858537912368774, 'eval_accuracy': 0.6129032258064516, 'eval_f1_macro': 0.19, 'eval_runtime': 0.5612, 'eval_samples_per_second': 55.24, 'eval_steps_per_second': 3.564, 'epoch': 3.0}
+D:\Repositories\ai201-project3-takemeter-starter-v2026\.venv\Lib\site-packages\torch\utils\data\dataloader.py:759: UserWarning: 'pin_memory' argument is set as true but no accelerator is found, then device pinned memory won't be used.
+  super().__init__(loader)
+{'loss': 0.9733, 'grad_norm': 2.2160041332244873, 'learning_rate': 1.3555555555555557e-05, 'epoch': 3.3333333333333335}
+{'eval_loss': 0.9538323879241943, 'eval_accuracy': 0.6129032258064516, 'eval_f1_macro': 0.19, 'eval_runtime': 0.5677, 'eval_samples_per_second': 54.604, 'eval_steps_per_second': 3.523, 'epoch': 4.0}
+D:\Repositories\ai201-project3-takemeter-starter-v2026\.venv\Lib\site-packages\torch\utils\data\dataloader.py:759: UserWarning: 'pin_memory' argument is set as true but no accelerator is found, then device pinned memory won't be used.
+  super().__init__(loader)
+{'loss': 0.9135, 'grad_norm': 2.203150749206543, 'learning_rate': 1.1333333333333334e-05, 'epoch': 4.444444444444445}
+{'eval_loss': 0.9228578209877014, 'eval_accuracy': 0.6129032258064516, 'eval_f1_macro': 0.19, 'eval_runtime': 0.5694, 'eval_samples_per_second': 54.441, 'eval_steps_per_second': 3.512, 'epoch': 5.0}
+D:\Repositories\ai201-project3-takemeter-starter-v2026\.venv\Lib\site-packages\torch\utils\data\dataloader.py:759: UserWarning: 'pin_memory' argument is set as true but no accelerator is found, then device pinned memory won't be used.
+  super().__init__(loader)
+{'loss': 0.8222, 'grad_norm': 3.2914328575134277, 'learning_rate': 9.111111111111112e-06, 'epoch': 5.555555555555555}
+{'eval_loss': 0.8996063470840454, 'eval_accuracy': 0.6451612903225806, 'eval_f1_macro': 0.26530612244897955, 'eval_runtime': 0.5642, 'eval_samples_per_second': 54.95, 'eval_steps_per_second': 3.545, 'epoch': 6.0}
+D:\Repositories\ai201-project3-takemeter-starter-v2026\.venv\Lib\site-packages\torch\utils\data\dataloader.py:759: UserWarning: 'pin_memory' argument is set as true but no accelerator is found, then device pinned memory won't be used.
+  super().__init__(loader)
+{'loss': 0.7179, 'grad_norm': 2.6256046295166016, 'learning_rate': 6.88888888888889e-06, 'epoch': 6.666666666666667}
+{'eval_loss': 0.8830308318138123, 'eval_accuracy': 0.6774193548387096, 'eval_f1_macro': 0.32291666666666663, 'eval_runtime': 0.5718, 'eval_samples_per_second': 54.214, 'eval_steps_per_second': 3.498, 'epoch': 7.0}
+D:\Repositories\ai201-project3-takemeter-starter-v2026\.venv\Lib\site-packages\torch\utils\data\dataloader.py:759: UserWarning: 'pin_memory' argument is set as true but no accelerator is found, then device pinned memory won't be used.
+  super().__init__(loader)
+{'loss': 0.7441, 'grad_norm': 2.5002012252807617, 'learning_rate': 4.666666666666667e-06, 'epoch': 7.777777777777778}
+{'eval_loss': 0.8729566335678101, 'eval_accuracy': 0.6451612903225806, 'eval_f1_macro': 0.30260047281323876, 'eval_runtime': 0.5866, 'eval_samples_per_second': 52.844, 'eval_steps_per_second': 3.409, 'epoch': 8.0}
+D:\Repositories\ai201-project3-takemeter-starter-v2026\.venv\Lib\site-packages\torch\utils\data\dataloader.py:759: UserWarning: 'pin_memory' argument is set as true but no accelerator is found, then device pinned memory won't be used.
+  super().__init__(loader)
+{'loss': 0.6377, 'grad_norm': 2.5589561462402344, 'learning_rate': 2.4444444444444447e-06, 'epoch': 8.88888888888889}
+{'eval_loss': 0.870675265789032, 'eval_accuracy': 0.6451612903225806, 'eval_f1_macro': 0.30260047281323876, 'eval_runtime': 0.583, 'eval_samples_per_second': 53.174, 'eval_steps_per_second': 3.431, 'epoch': 9.0}
+D:\Repositories\ai201-project3-takemeter-starter-v2026\.venv\Lib\site-packages\torch\utils\data\dataloader.py:759: UserWarning: 'pin_memory' argument is set as true but no accelerator is found, then device pinned memory won't be used.
+  super().__init__(loader)
+{'loss': 0.6346, 'grad_norm': 5.250848293304443, 'learning_rate': 2.2222222222222224e-07, 'epoch': 10.0}
+{'eval_loss': 0.8682378530502319, 'eval_accuracy': 0.6451612903225806, 'eval_f1_macro': 0.30260047281323876, 'eval_runtime': 0.5959, 'eval_samples_per_second': 52.024, 'eval_steps_per_second': 3.356, 'epoch': 10.0}
+{'train_runtime': 126.6699, 'train_samples_per_second': 10.973, 'train_steps_per_second': 0.711, 'train_loss': 0.8762749460008409, 'epoch': 10.0}
+Map:   0%|          | 0/30 [00:00<?, ? examples/s]Map: 100%|██████████| 30/30 [00:00<00:00, 6095.19 examples/s]
+D:\Repositories\ai201-project3-takemeter-starter-v2026\.venv\Lib\site-packages\torch\utils\data\dataloader.py:759: UserWarning: 'pin_memory' argument is set as true but no accelerator is found, then device pinned memory won't be used.
+  super().__init__(loader)
+  accuracy 0.700   macro F1 0.379
+
+============================================================
+Seed 7  (2 of 3)
+============================================================
+Some weights of DistilBertForSequenceClassification were not initialized from the model checkpoint at distilbert-base-uncased and are newly initialized: ['classifier.bias', 'classifier.weight', 'pre_classifier.bias', 'pre_classifier.weight']
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+Map:   0%|          | 0/139 [00:00<?, ? examples/s]Map: 100%|██████████| 139/139 [00:00<00:00, 13264.05 examples/s]
+Map:   0%|          | 0/31 [00:00<?, ? examples/s]Map: 100%|██████████| 31/31 [00:00<00:00, 3053.20 examples/s]
+D:\Repositories\ai201-project3-takemeter-starter-v2026\.venv\Lib\site-packages\torch\utils\data\dataloader.py:759: UserWarning: 'pin_memory' argument is set as true but no accelerator is found, then device pinned memory won't be used.
+  super().__init__(loader)
+{'eval_loss': 1.1870027780532837, 'eval_accuracy': 0.6129032258064516, 'eval_f1_macro': 0.19, 'eval_runtime': 0.5875, 'eval_samples_per_second': 52.766, 'eval_steps_per_second': 3.404, 'epoch': 1.0}
+D:\Repositories\ai201-project3-takemeter-starter-v2026\.venv\Lib\site-packages\torch\utils\data\dataloader.py:759: UserWarning: 'pin_memory' argument is set as true but no accelerator is found, then device pinned memory won't be used.
+  super().__init__(loader)
+{'loss': 1.3094, 'grad_norm': 1.57020103931427, 'learning_rate': 1.8e-05, 'epoch': 1.1111111111111112}
+{'eval_loss': 1.045507788658142, 'eval_accuracy': 0.6129032258064516, 'eval_f1_macro': 0.19, 'eval_runtime': 0.5952, 'eval_samples_per_second': 52.082, 'eval_steps_per_second': 3.36, 'epoch': 2.0}
+D:\Repositories\ai201-project3-takemeter-starter-v2026\.venv\Lib\site-packages\torch\utils\data\dataloader.py:759: UserWarning: 'pin_memory' argument is set as true but no accelerator is found, then device pinned memory won't be used.
+  super().__init__(loader)
+{'loss': 1.0931, 'grad_norm': 1.6066089868545532, 'learning_rate': 1.577777777777778e-05, 'epoch': 2.2222222222222223}
+{'eval_loss': 0.9909159541130066, 'eval_accuracy': 0.6129032258064516, 'eval_f1_macro': 0.19, 'eval_runtime': 0.5834, 'eval_samples_per_second': 53.133, 'eval_steps_per_second': 3.428, 'epoch': 3.0}
+D:\Repositories\ai201-project3-takemeter-starter-v2026\.venv\Lib\site-packages\torch\utils\data\dataloader.py:759: UserWarning: 'pin_memory' argument is set as true but no accelerator is found, then device pinned memory won't be used.
+  super().__init__(loader)
+{'loss': 0.9994, 'grad_norm': 1.9393072128295898, 'learning_rate': 1.3555555555555557e-05, 'epoch': 3.3333333333333335}
+{'eval_loss': 0.9709548950195312, 'eval_accuracy': 0.6129032258064516, 'eval_f1_macro': 0.19, 'eval_runtime': 0.5717, 'eval_samples_per_second': 54.221, 'eval_steps_per_second': 3.498, 'epoch': 4.0}
+D:\Repositories\ai201-project3-takemeter-starter-v2026\.venv\Lib\site-packages\torch\utils\data\dataloader.py:759: UserWarning: 'pin_memory' argument is set as true but no accelerator is found, then device pinned memory won't be used.
+  super().__init__(loader)
+{'loss': 0.9757, 'grad_norm': 3.0028882026672363, 'learning_rate': 1.1333333333333334e-05, 'epoch': 4.444444444444445}
+{'eval_loss': 0.9466075897216797, 'eval_accuracy': 0.6129032258064516, 'eval_f1_macro': 0.19, 'eval_runtime': 0.5799, 'eval_samples_per_second': 53.454, 'eval_steps_per_second': 3.449, 'epoch': 5.0}
+D:\Repositories\ai201-project3-takemeter-starter-v2026\.venv\Lib\site-packages\torch\utils\data\dataloader.py:759: UserWarning: 'pin_memory' argument is set as true but no accelerator is found, then device pinned memory won't be used.
+  super().__init__(loader)
+{'loss': 0.8575, 'grad_norm': 2.39774751663208, 'learning_rate': 9.111111111111112e-06, 'epoch': 5.555555555555555}
+{'eval_loss': 0.9274113774299622, 'eval_accuracy': 0.6129032258064516, 'eval_f1_macro': 0.19, 'eval_runtime': 0.5869, 'eval_samples_per_second': 52.816, 'eval_steps_per_second': 3.407, 'epoch': 6.0}
+D:\Repositories\ai201-project3-takemeter-starter-v2026\.venv\Lib\site-packages\torch\utils\data\dataloader.py:759: UserWarning: 'pin_memory' argument is set as true but no accelerator is found, then device pinned memory won't be used.
+  super().__init__(loader)
+{'loss': 0.8368, 'grad_norm': 2.6347196102142334, 'learning_rate': 6.88888888888889e-06, 'epoch': 6.666666666666667}
+{'eval_loss': 0.9094139337539673, 'eval_accuracy': 0.6129032258064516, 'eval_f1_macro': 0.19, 'eval_runtime': 0.5823, 'eval_samples_per_second': 53.235, 'eval_steps_per_second': 3.435, 'epoch': 7.0}
+D:\Repositories\ai201-project3-takemeter-starter-v2026\.venv\Lib\site-packages\torch\utils\data\dataloader.py:759: UserWarning: 'pin_memory' argument is set as true but no accelerator is found, then device pinned memory won't be used.
+  super().__init__(loader)
+{'loss': 0.7664, 'grad_norm': 3.051513671875, 'learning_rate': 4.666666666666667e-06, 'epoch': 7.777777777777778}
+{'eval_loss': 0.897678017616272, 'eval_accuracy': 0.6129032258064516, 'eval_f1_macro': 0.19, 'eval_runtime': 0.5749, 'eval_samples_per_second': 53.92, 'eval_steps_per_second': 3.479, 'epoch': 8.0}
+D:\Repositories\ai201-project3-takemeter-starter-v2026\.venv\Lib\site-packages\torch\utils\data\dataloader.py:759: UserWarning: 'pin_memory' argument is set as true but no accelerator is found, then device pinned memory won't be used.
+  super().__init__(loader)
+{'loss': 0.7403, 'grad_norm': 2.4661781787872314, 'learning_rate': 2.4444444444444447e-06, 'epoch': 8.88888888888889}
+{'eval_loss': 0.8941377997398376, 'eval_accuracy': 0.6129032258064516, 'eval_f1_macro': 0.25, 'eval_runtime': 0.5821, 'eval_samples_per_second': 53.259, 'eval_steps_per_second': 3.436, 'epoch': 9.0}
+D:\Repositories\ai201-project3-takemeter-starter-v2026\.venv\Lib\site-packages\torch\utils\data\dataloader.py:759: UserWarning: 'pin_memory' argument is set as true but no accelerator is found, then device pinned memory won't be used.
+  super().__init__(loader)
+{'loss': 0.6889, 'grad_norm': 3.7583882808685303, 'learning_rate': 2.2222222222222224e-07, 'epoch': 10.0}
+{'eval_loss': 0.8907057642936707, 'eval_accuracy': 0.6129032258064516, 'eval_f1_macro': 0.25, 'eval_runtime': 0.5781, 'eval_samples_per_second': 53.628, 'eval_steps_per_second': 3.46, 'epoch': 10.0}
+{'train_runtime': 127.191, 'train_samples_per_second': 10.928, 'train_steps_per_second': 0.708, 'train_loss': 0.9186062388949924, 'epoch': 10.0}
+Map:   0%|          | 0/30 [00:00<?, ? examples/s]Map: 100%|██████████| 30/30 [00:00<00:00, 5981.89 examples/s]
+D:\Repositories\ai201-project3-takemeter-starter-v2026\.venv\Lib\site-packages\torch\utils\data\dataloader.py:759: UserWarning: 'pin_memory' argument is set as true but no accelerator is found, then device pinned memory won't be used.
+  super().__init__(loader)
+  accuracy 0.767   macro F1 0.437
+
+============================================================
+Seed 2024  (3 of 3)
+============================================================
+Some weights of DistilBertForSequenceClassification were not initialized from the model checkpoint at distilbert-base-uncased and are newly initialized: ['classifier.bias', 'classifier.weight', 'pre_classifier.bias', 'pre_classifier.weight']
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+Map:   0%|          | 0/139 [00:00<?, ? examples/s]Map: 100%|██████████| 139/139 [00:00<00:00, 13357.35 examples/s]
+Map:   0%|          | 0/31 [00:00<?, ? examples/s]Map: 100%|██████████| 31/31 [00:00<00:00, 6925.35 examples/s]
+D:\Repositories\ai201-project3-takemeter-starter-v2026\.venv\Lib\site-packages\torch\utils\data\dataloader.py:759: UserWarning: 'pin_memory' argument is set as true but no accelerator is found, then device pinned memory won't be used.
+  super().__init__(loader)
+{'eval_loss': 1.197268009185791, 'eval_accuracy': 0.6129032258064516, 'eval_f1_macro': 0.19, 'eval_runtime': 0.5626, 'eval_samples_per_second': 55.106, 'eval_steps_per_second': 3.555, 'epoch': 1.0}
+D:\Repositories\ai201-project3-takemeter-starter-v2026\.venv\Lib\site-packages\torch\utils\data\dataloader.py:759: UserWarning: 'pin_memory' argument is set as true but no accelerator is found, then device pinned memory won't be used.
+  super().__init__(loader)
+{'loss': 1.3093, 'grad_norm': 4.0009002685546875, 'learning_rate': 1.8e-05, 'epoch': 1.1111111111111112}
+{'eval_loss': 1.0404998064041138, 'eval_accuracy': 0.6129032258064516, 'eval_f1_macro': 0.19, 'eval_runtime': 0.5672, 'eval_samples_per_second': 54.652, 'eval_steps_per_second': 3.526, 'epoch': 2.0}
+D:\Repositories\ai201-project3-takemeter-starter-v2026\.venv\Lib\site-packages\torch\utils\data\dataloader.py:759: UserWarning: 'pin_memory' argument is set as true but no accelerator is found, then device pinned memory won't be used.
+  super().__init__(loader)
+{'loss': 1.118, 'grad_norm': 2.497750759124756, 'learning_rate': 1.577777777777778e-05, 'epoch': 2.2222222222222223}
+{'eval_loss': 0.9725658297538757, 'eval_accuracy': 0.6129032258064516, 'eval_f1_macro': 0.19, 'eval_runtime': 0.5618, 'eval_samples_per_second': 55.183, 'eval_steps_per_second': 3.56, 'epoch': 3.0}
+D:\Repositories\ai201-project3-takemeter-starter-v2026\.venv\Lib\site-packages\torch\utils\data\dataloader.py:759: UserWarning: 'pin_memory' argument is set as true but no accelerator is found, then device pinned memory won't be used.
+  super().__init__(loader)
+{'loss': 0.9812, 'grad_norm': 2.6196227073669434, 'learning_rate': 1.3555555555555557e-05, 'epoch': 3.3333333333333335}
+{'eval_loss': 0.9414553642272949, 'eval_accuracy': 0.6129032258064516, 'eval_f1_macro': 0.19, 'eval_runtime': 0.5667, 'eval_samples_per_second': 54.7, 'eval_steps_per_second': 3.529, 'epoch': 4.0}
+D:\Repositories\ai201-project3-takemeter-starter-v2026\.venv\Lib\site-packages\torch\utils\data\dataloader.py:759: UserWarning: 'pin_memory' argument is set as true but no accelerator is found, then device pinned memory won't be used.
+  super().__init__(loader)
+{'loss': 0.9483, 'grad_norm': 2.845524787902832, 'learning_rate': 1.1333333333333334e-05, 'epoch': 4.444444444444445}
+{'eval_loss': 0.9269278049468994, 'eval_accuracy': 0.6451612903225806, 'eval_f1_macro': 0.26530612244897955, 'eval_runtime': 0.5728, 'eval_samples_per_second': 54.124, 'eval_steps_per_second': 3.492, 'epoch': 5.0}
+D:\Repositories\ai201-project3-takemeter-starter-v2026\.venv\Lib\site-packages\torch\utils\data\dataloader.py:759: UserWarning: 'pin_memory' argument is set as true but no accelerator is found, then device pinned memory won't be used.
+  super().__init__(loader)
+{'loss': 0.8174, 'grad_norm': 2.3344943523406982, 'learning_rate': 9.111111111111112e-06, 'epoch': 5.555555555555555}
+{'eval_loss': 0.9137828350067139, 'eval_accuracy': 0.5806451612903226, 'eval_f1_macro': 0.2364066193853428, 'eval_runtime': 0.5627, 'eval_samples_per_second': 55.089, 'eval_steps_per_second': 3.554, 'epoch': 6.0}
+D:\Repositories\ai201-project3-takemeter-starter-v2026\.venv\Lib\site-packages\torch\utils\data\dataloader.py:759: UserWarning: 'pin_memory' argument is set as true but no accelerator is found, then device pinned memory won't be used.
+  super().__init__(loader)
+{'loss': 0.7169, 'grad_norm': 3.196004629135132, 'learning_rate': 6.88888888888889e-06, 'epoch': 6.666666666666667}
+{'eval_loss': 0.8964098691940308, 'eval_accuracy': 0.5806451612903226, 'eval_f1_macro': 0.2364066193853428, 'eval_runtime': 0.5541, 'eval_samples_per_second': 55.948, 'eval_steps_per_second': 3.61, 'epoch': 7.0}
+D:\Repositories\ai201-project3-takemeter-starter-v2026\.venv\Lib\site-packages\torch\utils\data\dataloader.py:759: UserWarning: 'pin_memory' argument is set as true but no accelerator is found, then device pinned memory won't be used.
+  super().__init__(loader)
+{'loss': 0.814, 'grad_norm': 2.9677634239196777, 'learning_rate': 4.666666666666667e-06, 'epoch': 7.777777777777778}
+{'eval_loss': 0.8836780786514282, 'eval_accuracy': 0.6451612903225806, 'eval_f1_macro': 0.32525252525252524, 'eval_runtime': 0.5456, 'eval_samples_per_second': 56.822, 'eval_steps_per_second': 3.666, 'epoch': 8.0}
+D:\Repositories\ai201-project3-takemeter-starter-v2026\.venv\Lib\site-packages\torch\utils\data\dataloader.py:759: UserWarning: 'pin_memory' argument is set as true but no accelerator is found, then device pinned memory won't be used.
+  super().__init__(loader)
+{'loss': 0.6709, 'grad_norm': 2.446237564086914, 'learning_rate': 2.4444444444444447e-06, 'epoch': 8.88888888888889}
+{'eval_loss': 0.8764442801475525, 'eval_accuracy': 0.6451612903225806, 'eval_f1_macro': 0.32525252525252524, 'eval_runtime': 0.5477, 'eval_samples_per_second': 56.598, 'eval_steps_per_second': 3.652, 'epoch': 9.0}
+D:\Repositories\ai201-project3-takemeter-starter-v2026\.venv\Lib\site-packages\torch\utils\data\dataloader.py:759: UserWarning: 'pin_memory' argument is set as true but no accelerator is found, then device pinned memory won't be used.
+  super().__init__(loader)
+{'loss': 0.6595, 'grad_norm': 4.568027019500732, 'learning_rate': 2.2222222222222224e-07, 'epoch': 10.0}
+{'eval_loss': 0.8737390041351318, 'eval_accuracy': 0.6451612903225806, 'eval_f1_macro': 0.32525252525252524, 'eval_runtime': 0.5536, 'eval_samples_per_second': 55.998, 'eval_steps_per_second': 3.613, 'epoch': 10.0}
+{'train_runtime': 123.8136, 'train_samples_per_second': 11.227, 'train_steps_per_second': 0.727, 'train_loss': 0.8928499751620822, 'epoch': 10.0}
+Map:   0%|          | 0/30 [00:00<?, ? examples/s]Map: 100%|██████████| 30/30 [00:00<00:00, 6822.60 examples/s]
+D:\Repositories\ai201-project3-takemeter-starter-v2026\.venv\Lib\site-packages\torch\utils\data\dataloader.py:759: UserWarning: 'pin_memory' argument is set as true but no accelerator is found, then device pinned memory won't be used.
+  super().__init__(loader)
+  accuracy 0.633   macro F1 0.263
+
+
+============================================================
+All three done.
+============================================================
+Wrote results_three_seeds_after.json.
+Wrote results_three_seeds_after.json. Commit it.
+##### cell 19 done in 382.1s #####
+
+##### CELL 21 #####
+| Measure | Seed 42 | Seed 7 | Seed 2024 | Spread |
+|---|---|---|---|---|
+| Overall accuracy | 0.700 | 0.767 | 0.633 | 0.133 |
+| Macro F1 | 0.379 | 0.437 | 0.263 | 0.174 |
+| F1 — `hot_take` | 0.791 | 0.837 | 0.766 | 0.071 |
+| F1 — `informative` | 0.000 | 0.000 | 0.000 | 0.000 |
+| F1 — `humorous` | 0.727 | 0.909 | 0.286 | 0.623 |
+| F1 — `offensive` | 0.000 | 0.000 | 0.000 | 0.000 |
+
+Accuracy moved 0.133 across seeds — more than 10 points. Your dataset is too small or too lopsided for a stable measure. That IS a diagnosis. Write it down.
+##### cell 21 done in 0.0s #####
+
+##### CELL 23 #####
+| true \ predicted | hot_take | informative | humorous | offensive |
+|---|---|---|---|---|
+| **hot_take** | 17 | 0 | 1 | 0 |
+| **informative** | 5 | 0 | 0 | 0 |
+| **humorous** | 2 | 0 | 4 | 0 |
+| **offensive** | 1 | 0 | 0 | 0 |
+
+Biggest confusion: 5 real `informative` posts called `hot_take`.
+The other direction: 0 real `hot_take` posts called `informative`.
+
+That's lopsided — the model leans toward `hot_take` on this pair.
+A direction like that usually points at your labelling rather than the
+model. Your agreement report is the thing that can tell you which.
+##### cell 23 done in 0.0s #####
+
+ALL CELLS OK
