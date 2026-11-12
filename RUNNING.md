@@ -223,6 +223,89 @@ README has a block to fill in for each one.
 
 ---
 
+## The capstone extension: `classify.py` (Path B: local with logs)
+
+This is the run path that doesn't use the editor. It labels new r/Boxing posts
+from a terminal using the trained model. You don't need the notebook or a
+kernel, only the `.venv`.
+
+### The command that starts it
+
+```bash
+python classify.py classify "Canelo has been ducking Benavidez for years"
+```
+
+That one command works from a clean checkout. If there's no saved model yet, it
+trains one first (about 2 minutes on CPU, once), then classifies the post.
+Every later run loads the saved model in well under a second.
+
+### What the environment needs
+
+| Need | What |
+|---|---|
+| Python | 3.11, 3.12 or 3.13, **not 3.14** (tested on 3.13.7, Windows 11) |
+| Dependencies | `pip install -r requirements.txt` into `.venv`. Tested with torch 2.14.1 (CPU), transformers 4.57.6, datasets 3.6.0, accelerate 1.15.0, scikit-learn 1.9.1, pandas 2.3.3 |
+| Base model | `distilbert-base-uncased`, **257 MB**, downloaded automatically from Hugging Face on the first train into `~/.cache/huggingface/` |
+| Trained model | `models/takemeter/`, **257 MB** (`model.safetensors` 256 MB + tokenizer files). Built by the first run. Gitignored, not committed |
+| Data | `labels.csv` (committed) |
+| Hardware | CPU is fine. About 2 GB RAM while training, a GPU isn't needed |
+| Accounts / keys | None |
+
+### Clean-checkout setup
+
+```bash
+git clone https://github.com/lcanunayon/ai201-project3-takemeter-starter-v2026.git
+cd ai201-project3-takemeter-starter-v2026
+python -m venv .venv
+.venv\Scripts\Activate.ps1          # macOS/Linux: source .venv/bin/activate
+pip install -r requirements.txt
+python classify.py classify "Canelo has been ducking Benavidez for years"
+```
+
+### All the commands
+
+```bash
+python classify.py train                         # (re)train and save, ~2 min on CPU
+python classify.py classify "Canelo is washed"   # one post
+python classify.py classify --file posts.txt     # one post per line
+echo "some post" | python classify.py classify   # piped in
+python classify.py classify --json "..."         # full record, not the summary
+```
+
+**`train`** trains on `labels.csv` with the notebook's exact settings (seed 42,
+10 epochs, lr 2e-5, batch 16, max_length 128, the same 70/15/15 split). It
+saves the model to `models/takemeter/`, which is gitignored at about 257 MB,
+and writes `models/takemeter/takemeter_meta.json` with the test score and
+training seconds. It reproduces the notebook's seed 42 result: accuracy 0.700,
+macro F1 0.379. Re-run it after you change `labels.csv`, or on a fresh clone,
+since the model isn't committed.
+
+**`classify`** prints one line per post: label, confidence, milliseconds and
+a preview of the text. Each post also appends one JSON record to
+`logs/classify_log.jsonl`. Use `--log other.jsonl` to write somewhere else, for
+example to keep smoke tests out of the real log.
+
+| Field | What it is |
+|---|---|
+| `timestamp` | When the post was classified (ISO 8601, local offset) |
+| `run_id` | Shared by every post in one command, so a batch can be grouped |
+| `input` | The post, untrimmed |
+| `input_tokens`, `truncated` | Tokens the model read, and whether the post went past 128 |
+| `output`, `confidence` | The winning label and its softmax probability |
+| `scores` | The probability for all four labels |
+| `duration_ms` | Inference time for this post only |
+| `model_load_ms` | Time to load the model for this run (paid once per command) |
+| `device`, `model` | Where it ran, and which saved model |
+
+**Cost** is seconds of local compute, with no API spend. `duration_ms` and
+`model_load_ms` are measured with `time.perf_counter()` around the real calls,
+so the cost number comes from the log rather than from docs.
+
+If it says `No trained model ... Training one first`, that's the clean-checkout
+path working as intended. Let it finish.
+
+---
+
 ## Every command
 
 | Command | What it does |

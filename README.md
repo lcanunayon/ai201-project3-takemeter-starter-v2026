@@ -23,6 +23,84 @@
 
 ---
 
+<!-- ═══════════════════════ CAPSTONE — THE EXTENSION ═══════════════════════ -->
+
+## Capstone Extension: Classify CLI
+
+### What I extended
+
+**System:** TakeMeter, the r/Boxing post classifier (project 3). It fine-tunes
+DistilBERT to sort posts into `hot_take`, `informative`, `humorous` or
+`offensive`.
+
+**What's new:** TakeMeter could only train and score itself inside the
+notebook, and there was no way to label a post it hadn't seen. The extension is
+`classify.py`, a command-line classifier. It loads the trained model, labels new
+posts (from an argument, a file or stdin) with a confidence score, and logs
+every post as a structured record.
+
+### The Shape
+
+**Shape C: extend one capability.** I'm adding one capability to a classifier
+that already trains and scores: labelling **new** r/Boxing posts from the
+command line. `python classify.py classify "<post>"` returns a label and a
+confidence score, and writes a structured log record for every post. When I'm
+finished, I'll claim that the CLI labels new posts outside the notebook, gives
+the same answers the notebook's model would, and leaves a log record for every
+post with what came in, what came out and how long it took.
+
+**Out of scope:** <!-- Your call. A draft from the options weighed while planning: -->
+- **No fifth label.** I considered adding something like `analysis`, but it
+  means relabelling much of `labels.csv` and retraining. That's a second project.
+- **No HTTP endpoint or web interface.** A local server would do the same job
+  as the CLI with more moving parts.
+- **No "unsure" / abstain output, and no fixing the model.** The classifier's
+  known weaknesses (0 F1 on `informative` and `offensive`, leaning toward
+  `hot_take`) carry over unchanged. The extension exposes the model, it doesn't
+  retrain it to be better.
+
+**Size check:** the CLI is one file of about 250 lines, reusing the notebook's
+split and settings. It was well under the ninety-minute limit.
+
+### Run path
+
+**Path B: local with logs.** One documented command starts it, and it works from
+a clean checkout:
+`python classify.py classify "<post>"`. The command, the environment it needs
+(Python version, pinned dependencies, model files and their size) and the log
+format are in [RUNNING.md](RUNNING.md#the-capstone-extension-classifypy-path-b-local-with-logs).
+The committed run record is `logs/classify_log.jsonl`, pasted below.
+
+### Acceptance criteria
+
+<!-- TODO: five criteria, written by you BEFORE running any trials. At least
+     three must be about the CLI, not about the classifier as it already worked.
+     Commit this section before the first trial so the history shows the order. -->
+
+### Trials, verdicts and diagnoses
+
+<!-- TODO: three trials per criterion, then Met/Missed and, for each miss,
+     which part of the system failed and how. -->
+
+### Structured log extract
+
+<!-- TODO: at least ten entries pasted from logs/classify_log.jsonl. -->
+
+### Cost
+
+<!-- TODO: measured seconds of compute per run, from duration_ms /
+     model_load_ms in the log, and how you got it. -->
+
+### The improvement
+
+<!-- TODO: one change, re-run, before and after side by side. -->
+
+### What's left
+
+<!-- TODO: what you'd do next, and why you stopped. -->
+
+---
+
 <!-- ─────────────────────────────────────────────────────────────────────────
      HOW TO USE THIS FILE
 
