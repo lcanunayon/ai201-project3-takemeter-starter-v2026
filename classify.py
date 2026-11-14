@@ -25,6 +25,7 @@ import json
 import os
 import sys
 import time
+import traceback
 import uuid
 from datetime import datetime, timezone
 from pathlib import Path
@@ -42,6 +43,15 @@ BATCH_SIZE = 16
 MAX_LENGTH = 128
 SEED = 42
 CSV = REPO_DIR / "labels.csv"
+
+
+# Measured before torch/transformers are imported, so process_ms in the log
+# covers imports + model load + inference: the real cost of one command.
+PROCESS_START = time.perf_counter()
+
+
+class Rejected(Exception):
+    """Input the CLI refuses (blank post, missing file, no text column)."""
 
 
 def now_iso():
@@ -165,12 +175,12 @@ def read_posts(args):
     """
     for path in (args.csv, args.file):
         if path and not Path(path).is_file():
-            sys.exit(f"No such file: {path}")
+            raise Rejected(f"No such file: {path}")
     if args.csv:
         import pandas as pd
         df = pd.read_csv(args.csv)
         if "text" not in df.columns:
-            sys.exit(f"{args.csv} has no 'text' column. Found: {', '.join(df.columns)}")
+            raise Rejected(f"{args.csv} has no 'text' column. Found: {', '.join(df.columns)}")
         has_label = "label" in df.columns
         out = []
         for _, row in df.iterrows():
@@ -180,7 +190,7 @@ def read_posts(args):
                 out.append((text, exp))
         return out
     if args.text:
-        # A blank argument ("   ") is not a post: don't classify or log it.
+        # A blank argument ("   ") is not a post: rejected (and logged as such).
         text = " ".join(args.text).strip()
         return [(text, None)] if text else []
     if args.file:
@@ -191,11 +201,56 @@ def read_posts(args):
     return []
 
 
+def describe_input(args):
+    """What came in, for a failure record when there may be no post to show."""
+    if args.csv:
+        return f"--csv {args.csv}"
+    if args.file:
+        return f"--file {args.file}"
+    if args.text:
+        return " ".join(args.text)
+    return "<stdin>"
+
+
 def cmd_classify(args):
+    """
+    Wraps the real work so a run that fails still leaves a record. A rejected
+    input or a crash writes one log line with status "rejected" / "error",
+    the input, the error, and how long it ran before failing.
+    """
+    run_id = uuid.uuid4().hex[:8]
+    log_path = Path(args.log) if args.log else DEFAULT_LOG
+
+    def fail(status, err):
+        append_log(log_path, {
+            "timestamp": now_iso(),
+            "run_id": run_id,
+            "status": status,
+            "input": describe_input(args),
+            "output": None,
+            "error": f"{type(err).__name__}: {err}",
+            "process_ms": round((time.perf_counter() - PROCESS_START) * 1000, 1),
+        })
+
+    try:
+        _classify(args, run_id, log_path)
+    except Rejected as e:
+        fail("rejected", e)
+        sys.exit(f"Rejected: {e}  (logged to {log_path})")
+    except KeyboardInterrupt as e:
+        fail("interrupted", e)
+        sys.exit(130)
+    except Exception as e:
+        fail("error", e)
+        traceback.print_exc()
+        sys.exit(f"Error: {e}  (logged to {log_path})")
+
+
+def _classify(args, run_id, log_path):
     posts = read_posts(args)
     if not posts:
-        sys.exit("Nothing to classify. Pass text, --csv posts.csv, --file posts.txt, "
-                 "or pipe posts in.")
+        raise Rejected("Nothing to classify. Pass text, --csv posts.csv, --file posts.txt, "
+                       "or pipe posts in.")
     if not (MODEL_DIR / "config.json").exists():
         # A clean checkout has no model (it's gitignored), so build it once.
         print(f"No trained model at {MODEL_DIR}. Training one first (~2 min on CPU)...",
@@ -205,7 +260,6 @@ def cmd_classify(args):
     import torch
     from transformers import AutoModelForSequenceClassification, AutoTokenizer
 
-    run_id = uuid.uuid4().hex[:8]
     device = pick_device()
 
     t0 = time.perf_counter()
@@ -215,7 +269,6 @@ def cmd_classify(args):
     load_ms = round((time.perf_counter() - t0) * 1000, 1)
     labels = [model.config.id2label[i] for i in range(model.config.num_labels)]
 
-    log_path = Path(args.log) if args.log else DEFAULT_LOG
     results = []
     for text, expected in posts:
         t = time.perf_counter()
@@ -229,6 +282,7 @@ def cmd_classify(args):
         record = {
             "timestamp": now_iso(),
             "run_id": run_id,
+            "status": "ok",
             "input": text,
             "input_tokens": int(enc["input_ids"].shape[1]),
             "truncated": len(tokenizer(text)["input_ids"]) > MAX_LENGTH,
@@ -237,6 +291,7 @@ def cmd_classify(args):
             "scores": {l: round(p, 4) for l, p in zip(labels, probs)},
             "duration_ms": duration_ms,
             "model_load_ms": load_ms,
+            "process_ms": round((time.perf_counter() - PROCESS_START) * 1000, 1),
             "device": device,
             "model": str(MODEL_DIR.relative_to(REPO_DIR)),
         }
