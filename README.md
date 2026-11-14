@@ -71,6 +71,27 @@ a clean checkout:
 format are in [RUNNING.md](RUNNING.md#the-capstone-extension-classifypy-path-b-local-with-logs).
 The committed run record is `logs/classify_log.jsonl`, pasted below.
 
+### The original system still works
+
+The extension adds files and doesn't edit any of the original ones.
+`git diff d08863a HEAD` (the last commit before the capstone) shows no changes
+to the notebook, `baseline.py`, `agreement.py`, `test.py`, `labels.csv` or
+`test_split.csv`. I also re-ran the whole original pipeline from a fresh export
+of the repo on 2026-11-14. Full output is in
+[logs/regression_2026-11-14.txt](logs/regression_2026-11-14.txt).
+
+| Check | Result |
+|---|---|
+| `python test.py` | 10 passed, 0 failed |
+| `python agreement.py` | `agreement_results.json` byte-identical to the committed one |
+| `python baseline.py --trained results.json` | Same 30 predictions and metrics as committed (accuracy 0.233, macro F1 0.128) |
+| Notebook, all cells | Ran clean. Three seeds identical to `results_three_seeds_after.json` (0.700 / 0.767 / 0.633) |
+| `classify.py train` | Reproduces the notebook's seed 42 model exactly: accuracy 0.700, macro F1 0.379 |
+
+The only byte-level differences were Windows line endings (`\r\n` vs `\n`)
+inside multi-line posts in `test_split.csv` and `baseline_results.json`. The
+content is the same.
+
 ### Acceptance criteria
 
 <!-- TODO: five criteria, written by you BEFORE running any trials. At least
