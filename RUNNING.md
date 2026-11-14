@@ -262,6 +262,26 @@ pip install -r requirements.txt
 python classify.py classify "Canelo has been ducking Benavidez for years"
 ```
 
+**Tested from a clean checkout on 2026-11-14.** I cloned into an empty folder and
+ran exactly the six lines above in Windows PowerShell 5.1:
+- `pip install` took 160 s.
+- The first `classify` trained in 117 s and reproduced accuracy 0.700 /
+  macro F1 0.379, then classified the post and wrote
+  `logs/classify_log.jsonl`. Exit code 0.
+
+Three things a reader might hit that I didn't:
+- **`Activate.ps1 cannot be loaded because running scripts is disabled`.** That's
+  PowerShell's execution policy. Run
+  `Set-ExecutionPolicy -Scope CurrentUser RemoteSigned` once, or skip activation
+  and call `.venv\Scripts\python.exe classify.py ...` directly.
+- **The 257 MB base-model download.** My machine already had
+  `distilbert-base-uncased` in `~/.cache/huggingface/`, so the clone test didn't
+  download it. On a fresh machine, the first run needs internet and a few extra
+  minutes.
+- **Red `NativeCommandError` text around `git clone` and `pip install`** in
+  PowerShell 5.1. Those tools write progress to stderr and PowerShell colours it
+  as an error. It isn't one. Check the exit code.
+
 ### All the commands
 
 ```bash
@@ -290,12 +310,14 @@ example to keep smoke tests out of the real log.
 |---|---|
 | `timestamp` | When the post was classified (ISO 8601, local offset) |
 | `run_id` | Shared by every post in one command, so a batch can be grouped |
-| `input` | The post, untrimmed |
+| `status` | `ok`, or `rejected` (bad input), `error` (a crash) or `interrupted` (Ctrl-C). Failed runs log `input`, `output: null`, `error` and `process_ms` |
+| `input` | The post, untrimmed. On a failure, what was passed (`--csv path`, the text, or `<stdin>`) |
 | `input_tokens`, `truncated` | Tokens the model read, and whether the post went past 128 |
 | `output`, `confidence` | The winning label and its softmax probability |
 | `scores` | The probability for all four labels |
 | `duration_ms` | Inference time for this post only |
 | `model_load_ms` | Time to load the model for this run (paid once per command) |
+| `process_ms` | Time from the first line of `classify.py` to this record: imports, load and inference. The real cost of a command |
 | `device`, `model` | Where it ran, and which saved model |
 | `expected`, `correct` | Only with `--csv` and a `label` column: the CSV's label, and whether the output matched it |
 
@@ -376,7 +398,10 @@ path working as intended. Let it finish.
 | `my_staff_labels.csv` | Your labels on the staff set. **You create this** |
 | `classify.py` | The capstone extension: classifies new posts from the command line |
 | `models/takemeter/` | The model `classify.py` loads. Built by its first run, 257 MB, **gitignored** |
-| `logs/classify_log.jsonl` | One JSON record per classified post. **Commit it**: it's the run record |
+| `logs/classify_log.jsonl` | One JSON record per classified post or failed run. **Commit it**: it's the run record |
+| `measure_cost.py` | Runs the CLI 10 times as separate processes and times them |
+| `logs/cost_runs.csv` | Those 10 timings |
+| `data/unlabelled_posts.csv` | 28 scraped r/Boxing comments, never labelled or trained on |
 | `logs/test_run_*.txt` | Full notebook run logs |
 
 ---

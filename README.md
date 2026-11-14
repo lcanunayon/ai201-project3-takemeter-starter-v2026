@@ -36,7 +36,7 @@ DistilBERT to sort posts into `hot_take`, `informative`, `humorous` or
 **What's new:** TakeMeter could only train and score itself inside the
 notebook, and there was no way to label a post it hadn't seen. The extension is
 `classify.py`, a command-line classifier. It loads the trained model, labels new
-posts (from an argument, a file or stdin) with a confidence score, and logs
+posts (from an argument, a CSV, a text file or stdin) with a confidence score, and logs
 every post as a structured record.
 
 ### The Shape
@@ -103,14 +103,90 @@ content is the same.
 <!-- TODO: three trials per criterion, then Met/Missed and, for each miss,
      which part of the system failed and how. -->
 
-### Structured log extract
+### Instrumentation
 
-<!-- TODO: at least ten entries pasted from logs/classify_log.jsonl. -->
+Every `classify.py classify` command appends to `logs/classify_log.jsonl`, one
+JSON object per line. It's a file you can read back, not `print()` output.
+Successful posts get `status: "ok"`. A run that fails still leaves a record:
+`status` is `"rejected"` for bad input, `"error"` for a crash such as a missing
+or corrupt model, or `"interrupted"` for Ctrl-C, along with the input, the error
+and how long it ran. The field meanings are in
+[RUNNING.md](RUNNING.md#the-capstone-extension-classifypy-path-b-local-with-logs).
 
-### Cost
+Beyond the minimum (timestamp, input, output, duration), the log records the
+things I'll want in Milestone 5: `confidence` and all four `scores` (to tell a
+confident miss from a coin flip), `truncated` (posts past 128 tokens lose their
+end), `model_load_ms` vs `duration_ms` vs `process_ms` (where the time goes),
+and `expected` / `correct` when the input CSV has labels.
 
-<!-- TODO: measured seconds of compute per run, from duration_ms /
-     model_load_ms in the log, and how you got it. -->
+**The run record.** This is the whole of `logs/classify_log.jsonl` from a real
+session on 2026-11-14:
+- Entries 1–10 are the ten cost-measurement runs, one command each, on real
+  r/Boxing comments from `data/unlabelled_posts.csv`. These were scraped but
+  never labelled or trained on.
+- Entries 11–12 are failed runs: a blank post, and a mistyped file name
+  (`unlabeled` for `unlabelled`). Both were rejected and logged.
+
+```jsonl
+{"timestamp": "2026-11-14T15:37:16.700-06:00", "run_id": "30631e3a", "status": "ok", "input": "I think Benn being aggressive and throwing in tight the way he was was the right call.\nBut being that heavy on his front foot leaning forward at centre ring was a recipe for disaster, I don’t think that was well thought out lol", "input_tokens": 52, "truncated": false, "output": "hot_take", "confidence": 0.6892, "scores": {"hot_take": 0.6892, "informative": 0.132, "humorous": 0.1187, "offensive": 0.0601}, "duration_ms": 63.0, "model_load_ms": 136.5, "process_ms": 5835.6, "device": "cpu", "model": "models\\takemeter"}
+{"timestamp": "2026-11-14T15:37:23.194-06:00", "run_id": "dfeeef91", "status": "ok", "input": "Realistically that was Benn’s only real chance to win with fighting like that. He was never going to win a technical boxing match cos he simply doesn’t have that style let alone at this level.\nThe Benn you seen tonight is him and nothing really changes. It’s been pretty much accepted for a long time that he just isn’t world level and in reality he hasn’t even won a title at British level.\nI thought Garcia would win a decision but I never saw him doing what he did. Eubank couldn’t even finish Benn in their first fight when he had him hurt.\nI’m not a Benn fan but I do kinda feel bad for him now as he’s been outted for what will be a highlight reel.", "input_tokens": 128, "truncated": true, "output": "hot_take", "confidence": 0.5286, "scores": {"hot_take": 0.5286, "informative": 0.2955, "humorous": 0.0958, "offensive": 0.0802}, "duration_ms": 61.9, "model_load_ms": 134.1, "process_ms": 5767.9, "device": "cpu", "model": "models\\takemeter"}
+{"timestamp": "2026-11-14T15:37:29.660-06:00", "run_id": "0ca64040", "status": "ok", "input": "Eubank was boiled down to death the fact he even won is laughable", "input_tokens": 17, "truncated": false, "output": "hot_take", "confidence": 0.7162, "scores": {"hot_take": 0.7162, "informative": 0.1081, "humorous": 0.1258, "offensive": 0.0499}, "duration_ms": 33.4, "model_load_ms": 131.7, "process_ms": 5760.4, "device": "cpu", "model": "models\\takemeter"}
+{"timestamp": "2026-11-14T15:37:36.067-06:00", "run_id": "1a2f3aed", "status": "ok", "input": "If Benn was really 180+ that night, they sure don't have any plans for the later rounds.", "input_tokens": 25, "truncated": false, "output": "hot_take", "confidence": 0.7448, "scores": {"hot_take": 0.7448, "informative": 0.1192, "humorous": 0.0918, "offensive": 0.0443}, "duration_ms": 35.3, "model_load_ms": 132.9, "process_ms": 5710.4, "device": "cpu", "model": "models\\takemeter"}
+{"timestamp": "2026-11-14T15:37:42.486-06:00", "run_id": "a4832362", "status": "ok", "input": "That right hand was so Fkn beautiful. Nobody has faster hands in boxing than Ryan.", "input_tokens": 20, "truncated": false, "output": "hot_take", "confidence": 0.7673, "scores": {"hot_take": 0.7673, "informative": 0.0833, "humorous": 0.1084, "offensive": 0.041}, "duration_ms": 47.0, "model_load_ms": 131.9, "process_ms": 5718.6, "device": "cpu", "model": "models\\takemeter"}
+{"timestamp": "2026-11-14T15:37:48.932-06:00", "run_id": "9032e727", "status": "ok", "input": "In the slow motion you can see him use his left hand to block Benns view of his right and frame it, Benn barely saw it coming, class.", "input_tokens": 35, "truncated": false, "output": "hot_take", "confidence": 0.7663, "scores": {"hot_take": 0.7663, "informative": 0.0871, "humorous": 0.0924, "offensive": 0.0542}, "duration_ms": 38.4, "model_load_ms": 132.1, "process_ms": 5737.5, "device": "cpu", "model": "models\\takemeter"}
+{"timestamp": "2026-11-14T15:37:55.368-06:00", "run_id": "09ead8d6", "status": "ok", "input": "Benn the fat snake got what he deserved. Not a world class fighter, should go back to fighting old bums.", "input_tokens": 27, "truncated": false, "output": "hot_take", "confidence": 0.825, "scores": {"hot_take": 0.825, "informative": 0.0702, "humorous": 0.0691, "offensive": 0.0357}, "duration_ms": 46.6, "model_load_ms": 133.2, "process_ms": 5743.3, "device": "cpu", "model": "models\\takemeter"}
+{"timestamp": "2026-11-14T15:38:01.804-06:00", "run_id": "4453c57e", "status": "ok", "input": "Great fight, awful commentary. Dear God, Garcia was landing at will in the 1st and the commentary just talking about how they aren't 'all' landing and Benn is doing a good job, Gracias going to get tires he's moving too much. 2nd round Garcia stops him, 'i think it was premature, Garcia was robbed of a decisive finish' like my fucking god what are they watching?", "input_tokens": 87, "truncated": false, "output": "hot_take", "confidence": 0.4801, "scores": {"hot_take": 0.4801, "informative": 0.2949, "humorous": 0.1267, "offensive": 0.0983}, "duration_ms": 45.7, "model_load_ms": 137.4, "process_ms": 5728.0, "device": "cpu", "model": "models\\takemeter"}
+{"timestamp": "2026-11-14T15:38:08.236-06:00", "run_id": "b27fc2ba", "status": "ok", "input": "The commentary was embarrassing. Kellerman has gone full Stephen A Smith. He literally said “Benn is trying to show Garcia he can take the left hook” nah Max, Garcia is piecing Benn up, he has no choice in this.", "input_tokens": 52, "truncated": false, "output": "hot_take", "confidence": 0.4753, "scores": {"hot_take": 0.4753, "informative": 0.2133, "humorous": 0.1982, "offensive": 0.1131}, "duration_ms": 42.2, "model_load_ms": 135.0, "process_ms": 5712.3, "device": "cpu", "model": "models\\takemeter"}
+{"timestamp": "2026-11-14T15:38:14.658-06:00", "run_id": "79021d2c", "status": "ok", "input": "Someone finally explained to Benn that there are levels to this.", "input_tokens": 15, "truncated": false, "output": "hot_take", "confidence": 0.78, "scores": {"hot_take": 0.78, "informative": 0.074, "humorous": 0.103, "offensive": 0.043}, "duration_ms": 33.0, "model_load_ms": 135.4, "process_ms": 5721.7, "device": "cpu", "model": "models\\takemeter"}
+{"timestamp": "2026-11-14T15:38:21.802-06:00", "run_id": "3e55720e", "status": "rejected", "input": "   ", "output": null, "error": "Rejected: Nothing to classify. Pass text, --csv posts.csv, --file posts.txt, or pipe posts in.", "process_ms": 7.8}
+{"timestamp": "2026-11-14T15:38:21.904-06:00", "run_id": "4dafad7c", "status": "rejected", "input": "--csv data/unlabeled_posts.csv", "output": null, "error": "Rejected: No such file: data/unlabeled_posts.csv", "process_ms": 6.3}
+```
+
+All ten real posts came out `hot_take`, with confidence from 0.48 to 0.83. That matches the model's known lean toward `hot_take` from the confusion
+matrix below, and the criteria should test it.
+
+Failure path, tested on purpose before this session, logged to a scratch file
+so it stayed out of the record above. I renamed `model.safetensors` away and
+ran one post. The run failed and logged
+`"status": "error", "error": "OSError: Error no file named ... model.safetensors ..."`
+with `process_ms` 5686.7, then exited non-zero. The model was restored
+afterwards.
+
+### What It Costs
+
+**About 6.4 seconds of local CPU per run. $0 in API spend, and no tokens are
+billed.** It's measured, not estimated.
+
+**Method:** [measure_cost.py](measure_cost.py) runs the real command,
+`python classify.py classify "<post>"`, **ten times as ten separate processes**,
+one real post each. Each run is timed on two clocks that check each other:
+- `wall_ms`: `time.perf_counter()` around `subprocess.run` in the measuring
+  script. That's start to finish as a user would type it, including Python
+  startup.
+- `process_ms`: `time.perf_counter()` from the first line of `classify.py`,
+  written into the log record.
+
+The model was already trained, so training isn't counted here. Raw numbers are
+in [logs/cost_runs.csv](logs/cost_runs.csv).
+
+| Measure (10 runs) | Mean | SD | Min | Max |
+|---|---|---|---|---|
+| Wall-clock per run | **6442.8 ms** | 42.2 | 6400.2 | 6545.4 |
+| `process_ms` (from script start) | 5743.6 ms | 37.7 | 5710.4 | 5835.6 |
+| `model_load_ms` | 134.0 ms | 2.0 | 131.7 | 137.4 |
+| `duration_ms` (inference, one post) | 44.6 ms | 10.7 | 33.0 | 63.0 |
+
+**Where the time goes:** classifying the post is under 1% of a run (45 ms).
+Loading the model is about 2% (134 ms). Roughly 5.5 s is importing torch and
+transformers, and about 0.7 s is starting Python. So a batch is far cheaper per
+post than single runs: `--csv` pays the 6 s once and then about 45 ms per post.
+
+**One-time costs, not per run:** training the model takes about 120 s of CPU on
+the first run of a clean checkout (117.4 s in the clone test). `pip install`
+took 160 s with a warm pip cache.
+
+Hardware: CPU only (`device: cpu`), Windows 11, Python 3.13.7, torch 2.14.1+cpu,
+31.7 GB RAM.
 
 ### The improvement
 
