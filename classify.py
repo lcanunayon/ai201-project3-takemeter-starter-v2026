@@ -155,20 +155,42 @@ def cmd_train(args):
 # ── classify ─────────────────────────────────────────────────────────────────
 
 def read_posts(args):
+    """
+    Returns a list of (text, expected_label_or_None).
+
+    --csv exists because 19% of labels.csv posts span several lines: a
+    one-post-per-line file would cut those into fragments and classify each
+    fragment as its own post. A CSV keeps a multi-line post whole. If the CSV
+    also has a `label` column, it's carried through as `expected` in the log.
+    """
+    if args.csv:
+        import pandas as pd
+        df = pd.read_csv(args.csv)
+        if "text" not in df.columns:
+            sys.exit(f"{args.csv} has no 'text' column. Found: {', '.join(df.columns)}")
+        has_label = "label" in df.columns
+        out = []
+        for _, row in df.iterrows():
+            text = str(row["text"]).strip() if not pd.isna(row["text"]) else ""
+            if text:
+                exp = str(row["label"]).strip() if has_label and not pd.isna(row["label"]) else None
+                out.append((text, exp))
+        return out
     if args.text:
-        return [" ".join(args.text)]
+        return [(" ".join(args.text), None)]
     if args.file:
         lines = Path(args.file).read_text(encoding="utf-8").splitlines()
-        return [l.strip() for l in lines if l.strip()]
+        return [(l.strip(), None) for l in lines if l.strip()]
     if not sys.stdin.isatty():
-        return [l.strip() for l in sys.stdin.read().splitlines() if l.strip()]
+        return [(l.strip(), None) for l in sys.stdin.read().splitlines() if l.strip()]
     return []
 
 
 def cmd_classify(args):
     posts = read_posts(args)
     if not posts:
-        sys.exit("Nothing to classify. Pass text, --file posts.txt, or pipe posts in.")
+        sys.exit("Nothing to classify. Pass text, --csv posts.csv, --file posts.txt, "
+                 "or pipe posts in.")
     if not (MODEL_DIR / "config.json").exists():
         # A clean checkout has no model (it's gitignored), so build it once.
         print(f"No trained model at {MODEL_DIR}. Training one first (~2 min on CPU)...",
@@ -190,7 +212,7 @@ def cmd_classify(args):
 
     log_path = Path(args.log) if args.log else DEFAULT_LOG
     results = []
-    for text in posts:
+    for text, expected in posts:
         t = time.perf_counter()
         enc = tokenizer(text, truncation=True, max_length=MAX_LENGTH,
                         return_tensors="pt").to(device)
@@ -213,6 +235,9 @@ def cmd_classify(args):
             "device": device,
             "model": str(MODEL_DIR.relative_to(REPO_DIR)),
         }
+        if expected is not None:
+            record["expected"] = expected
+            record["correct"] = expected == labels[best]
         append_log(log_path, record)
         results.append(record)
 
@@ -220,11 +245,17 @@ def cmd_classify(args):
         print(json.dumps(results, indent=2, ensure_ascii=False))
     else:
         for r in results:
-            preview = r["input"] if len(r["input"]) <= 70 else r["input"][:67] + "..."
-            print(f"{r['output']:<12} {r['confidence']:.2f}  {r['duration_ms']:>7.1f} ms  {preview}")
+            flat = " ".join(r["input"].split())
+            preview = flat if len(flat) <= 70 else flat[:67] + "..."
+            mark = "" if "correct" not in r else ("  ok " if r["correct"] else f"  ✗ {r['expected']:<12}")
+            print(f"{r['output']:<12} {r['confidence']:.2f}  {r['duration_ms']:>7.1f} ms{mark}  {preview}")
         total = sum(r["duration_ms"] for r in results)
         print(f"\n{len(results)} post(s) · load {load_ms:.0f} ms · inference {total:.0f} ms "
               f"({total / len(results):.1f} ms/post) · {device} · run {run_id}")
+        scored = [r for r in results if "correct" in r]
+        if scored:
+            hits = sum(r["correct"] for r in scored)
+            print(f"{hits}/{len(scored)} match the CSV's label ({hits / len(scored):.3f})")
         print(f"Logged to {log_path}")
 
 
@@ -239,6 +270,8 @@ def main():
 
     c = sub.add_parser("classify", help="label new posts")
     c.add_argument("text", nargs="*", help="the post to classify")
+    c.add_argument("--csv", help="a CSV with a 'text' column (keeps multi-line posts whole); "
+                                 "a 'label' column, if present, is logged as 'expected'")
     c.add_argument("--file", help="a text file, one post per line")
     c.add_argument("--json", action="store_true", help="print full records as JSON")
     c.add_argument("--log", help=f"log file (default {DEFAULT_LOG.relative_to(REPO_DIR)})")
