@@ -267,7 +267,8 @@ python classify.py classify "Canelo has been ducking Benavidez for years"
 ```bash
 python classify.py train                         # (re)train and save, ~2 min on CPU
 python classify.py classify "Canelo is washed"   # one post
-python classify.py classify --file posts.txt     # one post per line
+python classify.py classify --csv posts.csv      # a 'text' column; multi-line posts stay whole
+python classify.py classify --file posts.txt     # one post per line (splits multi-line posts!)
 echo "some post" | python classify.py classify   # piped in
 python classify.py classify --json "..."         # full record, not the summary
 ```
@@ -296,6 +297,7 @@ example to keep smoke tests out of the real log.
 | `duration_ms` | Inference time for this post only |
 | `model_load_ms` | Time to load the model for this run (paid once per command) |
 | `device`, `model` | Where it ran, and which saved model |
+| `expected`, `correct` | Only with `--csv` and a `label` column: the CSV's label, and whether the output matched it |
 
 **Cost** is seconds of local compute, with no API spend. `duration_ms` and
 `model_load_ms` are measured with `time.perf_counter()` around the real calls,
@@ -316,6 +318,10 @@ path working as intended. Let it finish.
 | `python baseline.py --help` | All the options |
 | Notebook: sections 1–5 | Train once, write `results.json` — **unit 5** |
 | Notebook: sections 6–7 | Three seeds and the matrix — **unit 6** |
+| `python classify.py classify "<post>"` | Label a new post, log it — **capstone** |
+| `python classify.py classify --csv posts.csv` | Label a CSV of posts, multi-line posts kept whole — **capstone** |
+| `python classify.py train` | (Re)train and save the model the CLI uses — **capstone** |
+| `python classify.py classify --help` | All the options |
 
 ---
 
@@ -368,6 +374,10 @@ path working as intended. Let it finish.
 | `baseline_results.json` | Written by `baseline.py`. **Commit it** |
 | `agreement_results.json` | Written by `agreement.py`. **Commit it** |
 | `my_staff_labels.csv` | Your labels on the staff set. **You create this** |
+| `classify.py` | The capstone extension: classifies new posts from the command line |
+| `models/takemeter/` | The model `classify.py` loads. Built by its first run, 257 MB, **gitignored** |
+| `logs/classify_log.jsonl` | One JSON record per classified post. **Commit it**: it's the run record |
+| `logs/test_run_*.txt` | Full notebook run logs |
 
 ---
 
