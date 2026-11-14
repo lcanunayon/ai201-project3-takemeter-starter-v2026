@@ -163,6 +163,9 @@ def read_posts(args):
     fragment as its own post. A CSV keeps a multi-line post whole. If the CSV
     also has a `label` column, it's carried through as `expected` in the log.
     """
+    for path in (args.csv, args.file):
+        if path and not Path(path).is_file():
+            sys.exit(f"No such file: {path}")
     if args.csv:
         import pandas as pd
         df = pd.read_csv(args.csv)
@@ -177,7 +180,9 @@ def read_posts(args):
                 out.append((text, exp))
         return out
     if args.text:
-        return [(" ".join(args.text), None)]
+        # A blank argument ("   ") is not a post: don't classify or log it.
+        text = " ".join(args.text).strip()
+        return [(text, None)] if text else []
     if args.file:
         lines = Path(args.file).read_text(encoding="utf-8").splitlines()
         return [(l.strip(), None) for l in lines if l.strip()]
