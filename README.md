@@ -94,9 +94,34 @@ content is the same.
 
 ### Acceptance criteria
 
-<!-- TODO: five criteria, written by you BEFORE running any trials. At least
-     three must be about the CLI, not about the classifier as it already worked.
-     Commit this section before the first trial so the history shows the order. -->
+Written 2026-11-17, before any trial was run, and committed on their own so the
+history shows the order. All five are about the extension, the CLI. None of
+them re-tests how accurate the classifier is: that was project 3's job. Each
+criterion gets **three trials**, defined below, and it's **met only if all three
+trials hit the target**.
+
+| # | Criterion | Target | One trial is |
+|---|---|---|---|
+| **C1** | **Agrees with the notebook.** The CLI gives the same answers as the notebook's model it claims to reproduce | Accuracy on the 30 posts in `test_split.csv` equals the notebook's seed 42 result, **0.700, within ±1 post (0.667–0.733)** | A fresh `python classify.py train`, then `python classify.py classify --csv test_split.csv`, scored from `correct` in the log |
+| **C2** | **Always leaves a record.** Every run, including a failed one, writes a log record | **5 of 5 runs** each write exactly one record per post (or one per failed run) with `timestamp`, `input`, `output`, `status` and a duration, and the `status` is right (`ok` / `rejected` / `error`) | A fixed suite of 5 runs: one post, a 3-post CSV, a blank post, a missing file, and a run with the model file hidden |
+| **C3** | **Cost.** One run is cheap enough to use by hand | **Mean wall-clock ≤ 10 s per single-post run** over 10 runs on CPU, **and mean inference (`duration_ms`) ≤ 200 ms** | `python measure_cost.py`: 10 separate single-post runs |
+| **C4** | **Clean checkout.** Someone with only RUNNING.md can get a labelled post | The six documented setup lines, run in an **empty folder**, end with **exit code 0** and **one `ok` record** in the log, with **no extra manual steps**. The auto-trained model's test accuracy is 0.700 | A fresh `git clone` into a new empty folder, following RUNNING.md exactly |
+| **C5** | **Multi-line posts stay whole.** A post that spans several lines comes back as one label | **Records = posts, exactly** (no fragments), and every record's `input` equals the original post, newlines included | `--csv` on a CSV of multi-line posts. Three different sets: the 9 in `test_split.csv`, the 38 in `labels.csv`, and the multi-line posts in `data/unlabelled_posts.csv` |
+
+**Why these numbers:**
+- **C1** allows one post of slack (1/30 = 0.033). The CLI tokenizes without
+  padding to 128, so a borderline post could flip on rounding. More than one
+  flip would mean it isn't the same model.
+- **C2** has to be 100%. A log that misses some runs is the failure Milestone 3
+  warns about: "a failure that shows up only as an absence".
+- **C3:** I measured about 6.4 s once, while building. Ten seconds is my line for
+  "I'd still use this by hand", and it leaves room for a slower moment on the
+  same laptop. The 200 ms inference cap is there so a slowdown in the model
+  itself can't hide inside the import time.
+- **C4** allows no extra steps. Any step a reader has to guess counts as a miss,
+  even if I can work around it.
+- **C5** must be exact. One fragment means a post got split and labelled as two
+  half-posts.
 
 ### Trials, verdicts and diagnoses
 
