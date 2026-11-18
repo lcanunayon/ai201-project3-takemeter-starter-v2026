@@ -1,0 +1,20 @@
+{
+  "trained_at": "2026-11-17T22:09:35.537-06:00",
+  "seed": 42,
+  "epochs": 10,
+  "labels": [
+    "hot_take",
+    "informative",
+    "humorous",
+    "offensive"
+  ],
+  "base_model": "distilbert-base-uncased",
+  "max_length": 128,
+  "n_train": 139,
+  "n_val": 31,
+  "n_test": 30,
+  "test_accuracy": 0.7,
+  "test_f1_macro": 0.37949260042283295,
+  "train_seconds": 126.2,
+  "device": "cpu"
+}

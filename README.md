@@ -206,10 +206,204 @@ A post that spans several lines comes back as one label.
   equals its post** with its inner newlines still there. One fragment means a
   post got cut and labelled as two half-posts.
 
-### Trials, verdicts and diagnoses
+### Run Log — Trials
 
-<!-- TODO: three trials per criterion, then Met/Missed and, for each miss,
-     which part of the system failed and how. -->
+Run 2026-11-17, 22:07–22:46, on this laptop (CPU only). It started after the
+criteria (`62de4d1`, `e4d999d`) and the trial harness (`b583ace`) were
+committed and pushed. Nothing was changed between trials.
+
+- **C1, C2, C3 and C5** came from `bash run_trials.sh t1`, then `t2`, then `t3`,
+  back to back.
+- **C4** came from `run_c4.ps1 t1`, `t2` and `t3`: three fresh `git clone`s
+  into three new empty folders.
+
+Verdicts were scored mechanically by `python score_trials.py`, applying each
+criterion's pass rule as written. All raw output is in
+[logs/trials/](logs/trials/).
+
+| Criterion | Target | Run 1 | Run 2 | Run 3 | Verdict |
+|---|---|---|---|---|---|
+| 1. Agrees with the notebook | 0.667–0.733 on 30 posts | 21/30 = 0.700 | 21/30 = 0.700 | 21/30 = 0.700 | **MET** |
+| 2. Always leaves a record | 5 of 5 runs (7 records) | 5/5 (7/7) | 5/5 (7/7) | 5/5 (7/7) | **MET** |
+| 3. Cost per run | ≤ 10 s wall, ≤ 200 ms inference (mean of 10) | 6.83 s / 44 ms | 6.54 s / 40 ms | 6.53 s / 39 ms | **MET** |
+| 4. Clean checkout | exit 0, exactly 1 log line `ok`, acc 0.7 | exit 0, **13** lines, `ok`, 0.7 | exit 0, **13** lines, `ok`, 0.7 | exit 0, **13** lines, `ok`, 0.7 | **MISSED** |
+| 5. Multi-line posts stay whole | records = posts, inputs exact | 9/9 | 38/38 | 4/4 | **MET** |
+
+**C1 came out identical three times, so I checked that it was really
+re-running.** Each trial retrained from scratch:
+
+| Trial | `trained_at` | Train time | Classify `run_id` |
+|---|---|---|---|
+| t1 | 22:09:35 | 126.2 s | `0e28b053` |
+| t2 | 22:13:34 | 123.3 s | `cc89cfa7` |
+| t3 | 22:17:42 | 123.0 s | `c53bda1f` |
+
+The saved `model.safetensors` hashed the same every time (`c6dbb68b49463020…`),
+and all 30 predictions and confidences matched to 4 decimals. With seed 42 fixed,
+CPU training here is bit-for-bit deterministic. The three clean clones (C4)
+retrained it on separate installs and got 0.700 too. So C1's three trials test
+that the result reproduces. They can't show spread, because there isn't any.
+
+**C4 missed on its own rule, not on the system.** All three clones exited 0 and
+appended one `ok` record. But the clone's `logs/classify_log.jsonl` already
+holds the 12 committed run-record lines, so it had 13 lines, not "exactly 1". I
+noticed this before the trials started and scored the rule as written instead of
+changing it mid-test. Diagnosis is below.
+
+#### Pasted output
+
+**C1:** `logs/trials/c1_t1_out.txt`, produced by `classify.py` → `cmd_train()`
+then `cmd_classify()` → `_classify()`. Trial 1:
+
+```text
+$ python classify.py train
+Saved model to D:\Repositories\ai201-project3-takemeter-starter-v2026\models\takemeter
+test accuracy 0.700  macro F1 0.379  (126.2s on cpu)
+model.safetensors sha256: c6dbb68b49463020
+$ python classify.py classify --csv test_split.csv --log logs/trials/c1_t1.jsonl
+hot_take     0.81     41.5 ms  ✗ offensive     I'm sure his dad had power of attorney, so look at him first. He's ...
+hot_take     0.51     25.2 ms  ok   Meanwhile I offered to buy a used car for my parents for about 1k a...
+hot_take     0.63     15.1 ms  ok   Some people are saying it was an early stoppage, which I don’t thin...
+hot_take     0.72      7.5 ms  ✗ humorous      Fury definitely sends Reese some goodies every Christmas because ma...
+humorous     0.43      7.8 ms  ok   Unfortunately, that was his best 💀
+hot_take     0.76     14.2 ms  ok   I thought it was early but looking at the highlights he was pretty ...
+hot_take     0.74      9.5 ms  ok   He didn't complain or shout early stoppage either I don't think he ...
+hot_take     0.63     12.7 ms  ✗ informative   Oh there is cash alright. His ltd company has millions in cash rese...
+hot_take     0.57     11.0 ms  ✗ informative   Money corrupts. Prince Naseem Hamed went through a very similar exp...
+hot_take     0.46      8.8 ms  ✗ informative   Dropped Fury with the right then left hook in Rd12 of the first fight
+hot_take     0.50      7.2 ms  ✗ humorous      this is so fucking niche but its a good bar 😂
+hot_take     0.71     16.7 ms  ok   For months I've felt like I've been going crazy, Benn was never tha...
+hot_take     0.57     19.1 ms  ✗ informative   I dunno. Think he was probably trying to search for some happiness ...
+humorous     0.49      9.2 ms  ok   Lmao.... Ok buddy
+humorous     0.50      8.4 ms  ok   r/thathappened
+hot_take     0.68     10.7 ms  ok   Idk if this is my favorite 1-2 of all time, but I think it is the s...
+hot_take     0.78      8.3 ms  ok   The Wilder that fought big bang was damaged and washed. This was pr...
+hot_take     0.83      8.2 ms  ok   He was done and you could see it in his eyes. Not too far away from...
+hot_take     0.77     14.4 ms  ok   He wasn't even dodging that well, Garcias misses we because he anti...
+hot_take     0.46     23.6 ms  ok   Garcia was throwing so much heat that Benn charging in like that wa...
+hot_take     0.64      8.1 ms  ok   3 years at 38-41 can be a massive difference in physical prowess fo...
+hot_take     0.71      7.7 ms  ok   Yeh my coach always says if you need to lunge on your jab you're fu...
+humorous     0.56      7.9 ms  ok   👍💋 right back at you bro 👊😎
+humorous     0.47      9.0 ms  ✗ hot_take      weirdly objectifying first sentence about a woman you supposedly re...
+hot_take     0.78      9.6 ms  ok   Gimme some of that face to face shit boy That right hand to end the...
+hot_take     0.80      8.8 ms  ok   I know he was a boxer, but was he too thick to check his own account?
+hot_take     0.74      8.7 ms  ok   Jesus. By the third right punch, Ryan had figured out his timing an...
+hot_take     0.68      8.7 ms  ok   A few points: Damn what a punch Undefeated Wilder has one of the ni...
+hot_take     0.73     11.0 ms  ✗ informative   Lmao, you mean Ricky hid it away from his dad because his dad shoul...
+hot_take     0.71     11.2 ms  ok   Yes but it's still not his money and is not open for the estate to ...
+30 post(s) · load 191 ms · inference 370 ms (12.3 ms/post) · cpu · run 0e28b053
+21/30 match the CSV's label (0.700)
+Logged to logs\trials\c1_t1.jsonl
+```
+
+The first two records of `logs/trials/c1_t1.jsonl`:
+
+```jsonl
+{"timestamp": "2026-11-17T22:09:46.009-06:00", "run_id": "0e28b053", "status": "ok", "input": "I'm sure his dad had power of attorney, so look at him first. He's a rat.", "input_tokens": 25, "truncated": false, "output": "hot_take", "confidence": 0.8139, "scores": {"hot_take": 0.8139, "informative": 0.097, "humorous": 0.0535, "offensive": 0.0357}, "duration_ms": 41.5, "model_load_ms": 190.7, "process_ms": 8358.8, "device": "cpu", "model": "models\\takemeter", "expected": "offensive", "correct": false}
+{"timestamp": "2026-11-17T22:09:46.035-06:00", "run_id": "0e28b053", "status": "ok", "input": "Meanwhile I offered to buy a used car for my parents for about 1k and they insisted it be a loan and paid me back, so I set it at £10 a week and even then kept telling them don't worry.\nI bought them a new cooker a few years back as their previous one was over 20 years old and my mum was in tears telling me I didn't need to buy them anything.\nI offered to buy a new bed for them too, it was only a few years old but cheap and it was causing back pain and they declined.", "input_tokens": 116, "truncated": false, "output": "hot_take", "confidence": 0.506, "scores": {"hot_take": 0.506, "informative": 0.262, "humorous": 0.138, "offensive": 0.094}, "duration_ms": 25.2, "model_load_ms": 190.7, "process_ms": 8385.4, "device": "cpu", "model": "models\\takemeter", "expected": "hot_take", "correct": true}
+```
+
+**C2:** `logs/trials/c2_t2.jsonl`, trial 2, all 7 lines.
+- The 4 `ok` lines come from `classify.py` → `_classify()`.
+- The `rejected` lines are raised as `Rejected` in `read_posts()` / `_classify()`.
+- The `error` line is the model load failing in `_classify()`.
+- `cmd_classify()` → `fail()` writes all three failure records.
+
+```jsonl
+{"timestamp": "2026-11-17T22:13:48.845-06:00", "run_id": "b7c38f13", "status": "ok", "input": "Ryan destroyed buddy", "input_tokens": 5, "truncated": false, "output": "humorous", "confidence": 0.4532, "scores": {"hot_take": 0.3971, "informative": 0.0815, "humorous": 0.4532, "offensive": 0.0682}, "duration_ms": 30.9, "model_load_ms": 143.0, "process_ms": 5720.0, "device": "cpu", "model": "models\\takemeter"}
+{"timestamp": "2026-11-17T22:13:55.402-06:00", "run_id": "459e7e5f", "status": "ok", "input": "I'm sure his dad had power of attorney, so look at him first. He's a rat.", "input_tokens": 25, "truncated": false, "output": "hot_take", "confidence": 0.8139, "scores": {"hot_take": 0.8139, "informative": 0.097, "humorous": 0.0535, "offensive": 0.0357}, "duration_ms": 33.4, "model_load_ms": 134.2, "process_ms": 5808.2, "device": "cpu", "model": "models\\takemeter", "expected": "offensive", "correct": false}
+{"timestamp": "2026-11-17T22:13:55.428-06:00", "run_id": "459e7e5f", "status": "ok", "input": "Meanwhile I offered to buy a used car for my parents for about 1k and they insisted it be a loan and paid me back, so I set it at £10 a week and even then kept telling them don't worry.\nI bought them a new cooker a few years back as their previous one was over 20 years old and my mum was in tears telling me I didn't need to buy them anything.\nI offered to buy a new bed for them too, it was only a few years old but cheap and it was causing back pain and they declined.", "input_tokens": 116, "truncated": false, "output": "hot_take", "confidence": 0.506, "scores": {"hot_take": 0.506, "informative": 0.262, "humorous": 0.138, "offensive": 0.094}, "duration_ms": 23.8, "model_load_ms": 134.2, "process_ms": 5834.4, "device": "cpu", "model": "models\\takemeter", "expected": "hot_take", "correct": true}
+{"timestamp": "2026-11-17T22:13:55.445-06:00", "run_id": "459e7e5f", "status": "ok", "input": "Some people are saying it was an early stoppage, which I don’t think it was at all, but even if it was I think it’s pretty obvious that the ref saved Benn from a brutal KO that was going to happen sooner than later. He had nothing for Garcia and stopped throwing.", "input_tokens": 64, "truncated": false, "output": "hot_take", "confidence": 0.6336, "scores": {"hot_take": 0.6336, "informative": 0.2284, "humorous": 0.074, "offensive": 0.064}, "duration_ms": 15.8, "model_load_ms": 134.2, "process_ms": 5851.2, "device": "cpu", "model": "models\\takemeter", "expected": "hot_take", "correct": true}
+{"timestamp": "2026-11-17T22:13:56.221-06:00", "run_id": "3b18d63b", "status": "rejected", "input": "   ", "output": null, "error": "Rejected: Nothing to classify. Pass text, --csv posts.csv, --file posts.txt, or pipe posts in.", "process_ms": 6.6}
+{"timestamp": "2026-11-17T22:13:56.332-06:00", "run_id": "3fd301c4", "status": "rejected", "input": "--csv no_such_file.csv", "output": null, "error": "Rejected: No such file: no_such_file.csv", "process_ms": 6.2}
+{"timestamp": "2026-11-17T22:14:02.249-06:00", "run_id": "9d86ecf4", "status": "error", "input": "test", "output": null, "error": "OSError: Error no file named pytorch_model.bin, model.safetensors, tf_model.h5, model.ckpt.index or flax_model.msgpack found in directory D:\\Repositories\\ai201-project3-takemeter-starter-v2026\\models\\takemeter.", "process_ms": 5733.9}
+```
+
+**C3:** `logs/trials/c3_t3_out.txt`, produced by `measure_cost.py` → `main()`,
+which times 10 `subprocess.run` calls of `classify.py classify`. Trial 3:
+
+```text
+$ python measure_cost.py
+run  1      6577 ms wall      5868 ms process    41.5 ms inference  hot_take
+run  2      6534 ms wall      5810 ms process    60.8 ms inference  hot_take
+run  3      6496 ms wall      5793 ms process    32.5 ms inference  hot_take
+run  4      6500 ms wall      5796 ms process    34.0 ms inference  hot_take
+run  5      6536 ms wall      5823 ms process    34.0 ms inference  hot_take
+run  6      6522 ms wall      5802 ms process    34.4 ms inference  hot_take
+run  7      6487 ms wall      5776 ms process    34.5 ms inference  hot_take
+run  8      6611 ms wall      5859 ms process    46.3 ms inference  hot_take
+run  9      6504 ms wall      5774 ms process    42.5 ms inference  hot_take
+run 10      6500 ms wall      5781 ms process    32.2 ms inference  hot_take
+
+10 runs, all ok: True
+wall_ms        mean   6526.6  sd    39.8  min   6486.6  max   6610.6
+process_ms     mean   5808.2  sd    32.9  min   5774.4  max   5867.7
+model_load_ms  mean    139.5  sd     5.6  min    133.0  max    149.7
+duration_ms    mean     39.3  sd     9.0  min     32.2  max     60.8
+
+Wrote logs\cost_runs.csv
+```
+
+**C4:** `logs/trials/c4_t2_out.txt` (tail), produced by `run_c4.ps1` running
+RUNNING.md's six lines in a fresh `powershell.exe`. The `classify` step is
+`classify.py` → `_classify()`, which auto-trains on the first run. Trial 2:
+
+```text
+test accuracy 0.700  macro F1 0.379  (162.8s on cpu)
+hot_take     0.61     29.7 ms  Canelo has been ducking Benavidez for years
+
+1 post(s) · load 70 ms · inference 30 ms (29.7 ms/post) · cpu · run 30821187
+Logged to C:\Users\delon\AppData\Local\Temp\takemeter_c4\clonetest_t2\ai201-project3-takemeter-starter-v2026\logs\classify_log.jsonl
+
+=== C4 t2 summary ===
+folder: C:\Users\delon\AppData\Local\Temp\takemeter_c4\clonetest_t2
+exit code of last line: 0
+seconds, all six lines: 420.3
+log lines in clone: 13
+last log line status: ok
+test_accuracy: 0.7
+```
+
+The last line of the clone's log (`logs/trials/c4_t2_clone_log.jsonl`, line 13
+of 13). `process_ms` 176110.6 includes the auto-train.
+
+```jsonl
+{"timestamp": "2026-11-17T22:40:25.319-06:00", "run_id": "30821187", "status": "ok", "input": "Canelo has been ducking Benavidez for years", "input_tokens": 13, "truncated": false, "output": "hot_take", "confidence": 0.6124, "scores": {"hot_take": 0.6124, "informative": 0.1191, "humorous": 0.2042, "offensive": 0.0643}, "duration_ms": 29.7, "model_load_ms": 69.5, "process_ms": 176110.6, "device": "cpu", "model": "models\\takemeter"}
+```
+
+**C5:** `logs/trials/c5_t3_out.txt`, produced by `classify.py` →
+`read_posts()` (the `--csv` branch) then `_classify()`. Trial 3, the 4 unlabelled
+multi-line posts. The first record keeps its `
+`:
+
+```text
+$ python classify.py classify --csv data/c5_multiline_unlabelled.csv --log logs/trials/c5_t3.jsonl
+hot_take     0.69     40.9 ms  I think Benn being aggressive and throwing in tight the way he was ...
+hot_take     0.53     25.1 ms  Realistically that was Benn’s only real chance to win with fighting...
+hot_take     0.75     22.4 ms  I've no idea how anyone thought Benn had a chance against Garcia. G...
+hot_take     0.71     12.5 ms  caneloismypapi I'm ready to bend the knee for king ry. Always enter...
+
+4 post(s) · load 137 ms · inference 101 ms (25.2 ms/post) · cpu · run a595872a
+Logged to logs\trials\c5_t3.jsonl
+```
+
+```jsonl
+{"timestamp": "2026-11-17T22:19:23.577-06:00", "run_id": "a595872a", "status": "ok", "input": "I think Benn being aggressive and throwing in tight the way he was was the right call.\nBut being that heavy on his front foot leaning forward at centre ring was a recipe for disaster, I don’t think that was well thought out lol", "input_tokens": 52, "truncated": false, "output": "hot_take", "confidence": 0.6892, "scores": {"hot_take": 0.6892, "informative": 0.132, "humorous": 0.1187, "offensive": 0.0601}, "duration_ms": 40.9, "model_load_ms": 136.8, "process_ms": 5896.9, "device": "cpu", "model": "models\\takemeter"}
+```
+
+**Found while testing, not part of any criterion:**
+- **The clones didn't install the versions RUNNING.md says were tested.** They
+  got torch **2.15.0** and accelerate **1.16.0**, against 2.14.1 / 1.15.0 here,
+  because `requirements.txt` gives ranges (`torch>=2.2,<3.0`), not pins.
+  RUNNING.md calls them "pinned dependencies", and they aren't. It made no
+  difference to the result this time.
+- **C4 trial 1 took 841 s; trials 2 and 3 took 420 s and 364 s.** Trial 1
+  downloaded the newer wheels, and the later clones reused pip's cache.
+
+### Verdicts and diagnoses
+
+<!-- Milestone 6: Met/Missed against each target is in the table above. For
+     each miss (C4), which part of the system failed and how. -->
 
 ### Instrumentation
 
@@ -227,13 +421,15 @@ confident miss from a coin flip), `truncated` (posts past 128 tokens lose their
 end), `model_load_ms` vs `duration_ms` vs `process_ms` (where the time goes),
 and `expected` / `correct` when the input CSV has labels.
 
-**The run record.** This is the whole of `logs/classify_log.jsonl` from a real
+**The run record.** These are the first 12 lines of `logs/classify_log.jsonl`, from a real
 session on 2026-11-14:
 - Entries 1–10 are the ten cost-measurement runs, one command each, on real
   r/Boxing comments from `data/unlabelled_posts.csv`. These were scraped but
   never labelled or trained on.
 - Entries 11–12 are failed runs: a blank post, and a mistyped file name
   (`unlabeled` for `unlabelled`). Both were rejected and logged.
+- Lines 13–42 of the file came later. They're the 30 runs from Milestone 5's
+  three C3 trials (`measure_cost.py`), on the same 10 posts.
 
 ```jsonl
 {"timestamp": "2026-11-14T15:37:16.700-06:00", "run_id": "30631e3a", "status": "ok", "input": "I think Benn being aggressive and throwing in tight the way he was was the right call.\nBut being that heavy on his front foot leaning forward at centre ring was a recipe for disaster, I don’t think that was well thought out lol", "input_tokens": 52, "truncated": false, "output": "hot_take", "confidence": 0.6892, "scores": {"hot_take": 0.6892, "informative": 0.132, "humorous": 0.1187, "offensive": 0.0601}, "duration_ms": 63.0, "model_load_ms": 136.5, "process_ms": 5835.6, "device": "cpu", "model": "models\\takemeter"}

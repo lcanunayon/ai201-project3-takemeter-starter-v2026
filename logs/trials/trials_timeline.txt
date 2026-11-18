@@ -1,0 +1,30 @@
+### t1 started 2026-11-17T22:07:03-06:00
+### t1 finished 2026-11-17T22:11:24-06:00
+### t2 started 2026-11-17T22:11:24-06:00
+### t2 finished 2026-11-17T22:15:29-06:00
+### t3 started 2026-11-17T22:15:29-06:00
+### t3 finished 2026-11-17T22:19:24-06:00
+
+=== C4 t1 summary ===
+folder: C:\Users\delon\AppData\Local\Temp\takemeter_c4\clonetest_t1
+exit code of last line: 0
+seconds, all six lines: 840.6
+log lines in clone: 13
+last log line status: ok
+test_accuracy: 0.7
+
+=== C4 t2 summary ===
+folder: C:\Users\delon\AppData\Local\Temp\takemeter_c4\clonetest_t2
+exit code of last line: 0
+seconds, all six lines: 420.3
+log lines in clone: 13
+last log line status: ok
+test_accuracy: 0.7
+
+=== C4 t3 summary ===
+folder: C:\Users\delon\AppData\Local\Temp\takemeter_c4\clonetest_t3
+exit code of last line: 0
+seconds, all six lines: 363.5
+log lines in clone: 13
+last log line status: ok
+test_accuracy: 0.7

@@ -1,0 +1,22 @@
+$ (a) one post
+
+1 post(s) · load 140 ms · inference 33 ms (32.7 ms/post) · cpu · run 20b1d6f4
+Logged to logs\trials\c2_t1.jsonl
+exit 0
+$ (b) 3-post CSV
+hot_take     0.51     24.6 ms  ok   Meanwhile I offered to buy a used car for my parents for about 1k a...
+hot_take     0.63     14.8 ms  ok   Some people are saying it was an early stoppage, which I don’t thin...
+
+3 post(s) · load 142 ms · inference 74 ms (24.8 ms/post) · cpu · run 577a3a06
+2/3 match the CSV's label (0.667)
+Logged to logs\trials\c2_t1.jsonl
+exit 0
+$ (c) blank
+Rejected: Nothing to classify. Pass text, --csv posts.csv, --file posts.txt, or pipe posts in.  (logged to logs\trials\c2_t1.jsonl)
+exit 1
+$ (d) missing file
+Rejected: No such file: no_such_file.csv  (logged to logs\trials\c2_t1.jsonl)
+exit 1
+$ (e) model hidden
+Error: Error no file named pytorch_model.bin, model.safetensors, tf_model.h5, model.ckpt.index or flax_model.msgpack found in directory D:\Repositories\ai201-project3-takemeter-starter-v2026\models\takemeter.  (logged to logs\trials\c2_t1.jsonl)
+exit 1
