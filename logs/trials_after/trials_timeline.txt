@@ -1,0 +1,93 @@
+### t1 started 2026-11-17T22:53:13-06:00
+### t1 finished 2026-11-17T22:57:11-06:00
+### t2 started 2026-11-17T22:57:11-06:00
+### t2 finished 2026-11-17T23:01:15-06:00
+### t3 started 2026-11-17T23:01:15-06:00
+### t3 finished 2026-11-17T23:05:15-06:00
+Copy-Item : The given path's format is not supported.
+At D:\Repositories\ai201-project3-takemeter-starter-v2026\run_c4.ps1:42 char:1
++ Copy-Item $log (Join-Path $repo "$Out\c4_${K}_clone_log.jsonl") -Erro ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [Copy-Item], NotSupportedException
+    + FullyQualifiedErrorId : System.NotSupportedException,Microsoft.PowerShell.Commands.CopyItemCommand
+ 
+Copy-Item : The given path's format is not supported.
+At D:\Repositories\ai201-project3-takemeter-starter-v2026\run_c4.ps1:43 char:1
++ Copy-Item $meta (Join-Path $repo "$Out\c4_${K}_meta.json") -ErrorActi ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [Copy-Item], NotSupportedException
+    + FullyQualifiedErrorId : System.NotSupportedException,Microsoft.PowerShell.Commands.CopyItemCommand
+ 
+ConvertFrom-Json : Invalid JSON primitive: .
+At D:\Repositories\ai201-project3-takemeter-starter-v2026\run_c4.ps1:52 char:53
++ ... g line status: $(if ($lines) { ($lines[-1] | ConvertFrom-Json).status ...
++                                                  ~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [ConvertFrom-Json], ArgumentException
+    + FullyQualifiedErrorId : System.ArgumentException,Microsoft.PowerShell.Commands.ConvertFromJsonCommand
+ 
+
+=== C4 t1 summary ===
+folder: C:\Users\delon\AppData\Local\Temp\takemeter_c4\clonetest_t1
+exit code of last line: 0
+seconds, all six lines: 302.4
+log lines in clone: 1
+last log line status: 
+test_accuracy: 0.7
+Copy-Item : The given path's format is not supported.
+At D:\Repositories\ai201-project3-takemeter-starter-v2026\run_c4.ps1:42 char:1
++ Copy-Item $log (Join-Path $repo "$Out\c4_${K}_clone_log.jsonl") -Erro ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [Copy-Item], NotSupportedException
+    + FullyQualifiedErrorId : System.NotSupportedException,Microsoft.PowerShell.Commands.CopyItemCommand
+ 
+Copy-Item : The given path's format is not supported.
+At D:\Repositories\ai201-project3-takemeter-starter-v2026\run_c4.ps1:43 char:1
++ Copy-Item $meta (Join-Path $repo "$Out\c4_${K}_meta.json") -ErrorActi ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [Copy-Item], NotSupportedException
+    + FullyQualifiedErrorId : System.NotSupportedException,Microsoft.PowerShell.Commands.CopyItemCommand
+ 
+ConvertFrom-Json : Invalid JSON primitive: .
+At D:\Repositories\ai201-project3-takemeter-starter-v2026\run_c4.ps1:52 char:53
++ ... g line status: $(if ($lines) { ($lines[-1] | ConvertFrom-Json).status ...
++                                                  ~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [ConvertFrom-Json], ArgumentException
+    + FullyQualifiedErrorId : System.ArgumentException,Microsoft.PowerShell.Commands.ConvertFromJsonCommand
+ 
+
+=== C4 t2 summary ===
+folder: C:\Users\delon\AppData\Local\Temp\takemeter_c4\clonetest_t2
+exit code of last line: 0
+seconds, all six lines: 304.9
+log lines in clone: 1
+last log line status: 
+test_accuracy: 0.7
+Copy-Item : The given path's format is not supported.
+At D:\Repositories\ai201-project3-takemeter-starter-v2026\run_c4.ps1:42 char:1
++ Copy-Item $log (Join-Path $repo "$Out\c4_${K}_clone_log.jsonl") -Erro ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [Copy-Item], NotSupportedException
+    + FullyQualifiedErrorId : System.NotSupportedException,Microsoft.PowerShell.Commands.CopyItemCommand
+ 
+Copy-Item : The given path's format is not supported.
+At D:\Repositories\ai201-project3-takemeter-starter-v2026\run_c4.ps1:43 char:1
++ Copy-Item $meta (Join-Path $repo "$Out\c4_${K}_meta.json") -ErrorActi ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [Copy-Item], NotSupportedException
+    + FullyQualifiedErrorId : System.NotSupportedException,Microsoft.PowerShell.Commands.CopyItemCommand
+ 
+ConvertFrom-Json : Invalid JSON primitive: .
+At D:\Repositories\ai201-project3-takemeter-starter-v2026\run_c4.ps1:52 char:53
++ ... g line status: $(if ($lines) { ($lines[-1] | ConvertFrom-Json).status ...
++                                                  ~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [ConvertFrom-Json], ArgumentException
+    + FullyQualifiedErrorId : System.ArgumentException,Microsoft.PowerShell.Commands.ConvertFromJsonCommand
+ 
+
+=== C4 t3 summary ===
+folder: C:\Users\delon\AppData\Local\Temp\takemeter_c4\clonetest_t3
+exit code of last line: 0
+seconds, all six lines: 292.6
+log lines in clone: 1
+last log line status: 
+test_accuracy: 0.7

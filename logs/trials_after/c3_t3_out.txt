@@ -1,0 +1,19 @@
+$ python measure_cost.py
+run  1      7222 ms wall      6492 ms process    45.5 ms inference  hot_take
+run  2      6914 ms wall      6161 ms process    61.8 ms inference  hot_take
+run  3      6800 ms wall      6022 ms process    34.9 ms inference  hot_take
+run  4      6826 ms wall      6124 ms process    33.7 ms inference  hot_take
+run  5      6864 ms wall      6080 ms process    35.0 ms inference  hot_take
+run  6      6644 ms wall      5899 ms process    35.0 ms inference  hot_take
+run  7      7117 ms wall      6379 ms process    33.3 ms inference  hot_take
+run  8      6939 ms wall      6191 ms process    45.1 ms inference  hot_take
+run  9      6606 ms wall      5866 ms process    42.2 ms inference  hot_take
+run 10      6613 ms wall      5862 ms process    35.0 ms inference  hot_take
+
+10 runs, all ok: True
+wall_ms        mean   6854.6  sd   206.3  min   6606.4  max   7222.5
+process_ms     mean   6107.6  sd   211.4  min   5862.0  max   6492.0
+model_load_ms  mean    139.1  sd     4.4  min    133.9  max    146.5
+duration_ms    mean     40.1  sd     9.0  min     33.3  max     61.8
+
+Wrote logs\cost_runs.csv

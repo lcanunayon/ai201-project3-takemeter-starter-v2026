@@ -28,10 +28,10 @@ $cmd += "`n" + 'exit $LASTEXITCODE'
 
 # Don't inherit this session's Process-scope Bypass.
 Remove-Item Env:PSExecutionPolicyPreference -ErrorAction SilentlyContinue
-$out = Join-Path $repo "$Out\c4_${K}_out.txt"
+$outFile = Join-Path $repo "$Out\c4_${K}_out.txt"
 $t = [Diagnostics.Stopwatch]::StartNew()
 Push-Location $dir
-& powershell.exe -Command $cmd *> $out
+& powershell.exe -Command $cmd *> $outFile
 $code = $LASTEXITCODE
 Pop-Location
 $secs = [math]::Round($t.Elapsed.TotalSeconds, 1)
@@ -41,7 +41,8 @@ $log = Join-Path $clone "logs\classify_log.jsonl"
 $meta = Join-Path $clone "models\takemeter\takemeter_meta.json"
 Copy-Item $log (Join-Path $repo "$Out\c4_${K}_clone_log.jsonl") -ErrorAction SilentlyContinue
 Copy-Item $meta (Join-Path $repo "$Out\c4_${K}_meta.json") -ErrorAction SilentlyContinue
-$lines = if (Test-Path $log) { @(Get-Content $log) } else { @() }
+# @() outside the if: an if-statement unrolls a 1-element array into a string.
+$lines = @(if (Test-Path $log) { Get-Content $log })
 $summary = @"
 
 === C4 $K summary ===
@@ -52,5 +53,5 @@ log lines in clone: $($lines.Count)
 last log line status: $(if ($lines) { ($lines[-1] | ConvertFrom-Json).status } else { 'none' })
 test_accuracy: $(if (Test-Path $meta) { (Get-Content $meta -Raw | ConvertFrom-Json).test_accuracy } else { 'no meta' })
 "@
-Add-Content -Path $out -Value $summary -Encoding utf8
+Add-Content -Path $outFile -Value $summary -Encoding utf8
 $summary

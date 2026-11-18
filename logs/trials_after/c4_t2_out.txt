@@ -1,0 +1,530 @@
+powershell.exe : Cloning into 'ai201-project3-takemeter-starter-v2026'...
+At D:\Repositories\ai201-project3-takemeter-starter-v2026\run_c4.ps1:34 char:1
++ & powershell.exe -Command $cmd *> $out
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (Cloning into 'a...arter-v2026'...:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+Collecting pandas<3.0,>=2.0 (from -r requirements.txt (line 10))
+  Using cached pandas-2.3.3-cp313-cp313-win_amd64.whl.metadata (19 kB)
+Collecting transformers<5.0,>=4.44 (from -r requirements.txt (line 14))
+  Using cached transformers-4.57.6-py3-none-any.whl.metadata (43 kB)
+Collecting datasets<4.0,>=2.20 (from -r requirements.txt (line 19))
+  Using cached datasets-3.6.0-py3-none-any.whl.metadata (19 kB)
+Collecting accelerate<2.0,>=0.30 (from -r requirements.txt (line 20))
+  Using cached accelerate-1.16.0-py3-none-any.whl.metadata (19 kB)
+Collecting torch<3.0,>=2.2 (from -r requirements.txt (line 25))
+  Using cached torch-2.15.0-cp313-cp313-win_amd64.whl.metadata (36 kB)
+Collecting scikit-learn<2.0,>=1.3 (from -r requirements.txt (line 28))
+  Using cached scikit_learn-1.9.1-cp313-cp313-win_amd64.whl.metadata (9.3 kB)
+Collecting numpy>=1.26.0 (from pandas<3.0,>=2.0->-r requirements.txt (line 10))
+  Using cached numpy-2.5.5-cp313-cp313-win_amd64.whl.metadata (6.6 kB)
+Collecting python-dateutil>=2.8.2 (from pandas<3.0,>=2.0->-r requirements.txt (line 10))
+  Using cached python_dateutil-4.0.0-py3-none-any.whl.metadata (7.3 kB)
+Collecting pytz>=2020.1 (from pandas<3.0,>=2.0->-r requirements.txt (line 10))
+  Using cached pytz-2026.6-py2.py3-none-any.whl.metadata (22 kB)
+Collecting tzdata>=2022.7 (from pandas<3.0,>=2.0->-r requirements.txt (line 10))
+  Using cached tzdata-2026.6-py2.py3-none-any.whl.metadata (1.4 kB)
+Collecting filelock (from transformers<5.0,>=4.44->-r requirements.txt (line 14))
+  Using cached filelock-4.2.12-py3-none-any.whl.metadata (2.3 kB)
+Collecting huggingface-hub<1.0,>=0.34.0 (from transformers<5.0,>=4.44->-r requirements.txt (line 14))
+  Using cached huggingface_hub-0.36.2-py3-none-any.whl.metadata (15 kB)
+Collecting packaging>=20.0 (from transformers<5.0,>=4.44->-r requirements.txt (line 14))
+  Using cached packaging-26.3-py3-none-any.whl.metadata (3.5 kB)
+Collecting pyyaml>=5.1 (from transformers<5.0,>=4.44->-r requirements.txt (line 14))
+  Using cached pyyaml-6.0.3-cp313-cp313-win_amd64.whl.metadata (2.4 kB)
+Collecting regex!=2019.12.17 (from transformers<5.0,>=4.44->-r requirements.txt (line 14))
+  Using cached regex-2026.11.18-cp313-cp313-win_amd64.whl.metadata (41 kB)
+Collecting requests (from transformers<5.0,>=4.44->-r requirements.txt (line 14))
+  Using cached requests-2.34.2-py3-none-any.whl.metadata (4.8 kB)
+Collecting tokenizers<=0.23.0,>=0.22.0 (from transformers<5.0,>=4.44->-r requirements.txt (line 14))
+  Using cached tokenizers-0.22.2-cp39-abi3-win_amd64.whl.metadata (7.4 kB)
+Collecting safetensors>=0.4.3 (from transformers<5.0,>=4.44->-r requirements.txt (line 14))
+  Using cached safetensors-0.8.0-cp310-abi3-win_amd64.whl.metadata (4.2 kB)
+Collecting tqdm>=4.27 (from transformers<5.0,>=4.44->-r requirements.txt (line 14))
+  Using cached tqdm-4.70.1-py3-none-any.whl.metadata (57 kB)
+Collecting pyarrow>=15.0.0 (from datasets<4.0,>=2.20->-r requirements.txt (line 19))
+  Using cached pyarrow-26.0.1-cp313-cp313-win_amd64.whl.metadata (3.0 kB)
+Collecting dill<0.3.9,>=0.3.0 (from datasets<4.0,>=2.20->-r requirements.txt (line 19))
+  Using cached dill-0.3.8-py3-none-any.whl.metadata (10 kB)
+Collecting xxhash (from datasets<4.0,>=2.20->-r requirements.txt (line 19))
+  Using cached xxhash-4.1.0-cp313-cp313-win_amd64.whl.metadata (19 kB)
+Collecting multiprocess<0.70.17 (from datasets<4.0,>=2.20->-r requirements.txt (line 19))
+  Using cached multiprocess-0.70.16-py312-none-any.whl.metadata (7.2 kB)
+Collecting fsspec<=2025.3.0,>=2023.1.0 (from fsspec[http]<=2025.3.0,>=2023.1.0->datasets<4.0,>=2.20->-r requirements.txt (line 19))
+  Using cached fsspec-2025.3.0-py3-none-any.whl.metadata (11 kB)
+Collecting psutil (from accelerate<2.0,>=0.30->-r requirements.txt (line 20))
+  Using cached psutil-7.2.2-cp37-abi3-win_amd64.whl.metadata (22 kB)
+Collecting typing-extensions>=4.13.0 (from torch<3.0,>=2.2->-r requirements.txt (line 25))
+  Using cached typing_extensions-4.16.0-py3-none-any.whl.metadata (3.3 kB)
+Collecting setuptools>=77.0.3 (from torch<3.0,>=2.2->-r requirements.txt (line 25))
+  Using cached setuptools-84.2.1-py3-none-any.whl.metadata (6.6 kB)
+Collecting sympy>=1.13.3 (from torch<3.0,>=2.2->-r requirements.txt (line 25))
+  Using cached sympy-1.14.0-py3-none-any.whl.metadata (12 kB)
+Collecting networkx>=2.5.1 (from torch<3.0,>=2.2->-r requirements.txt (line 25))
+  Using cached networkx-3.7-py3-none-any.whl.metadata (6.7 kB)
+Collecting jinja2 (from torch<3.0,>=2.2->-r requirements.txt (line 25))
+  Using cached jinja2-3.1.6-py3-none-any.whl.metadata (2.9 kB)
+Collecting scipy>=1.10.0 (from scikit-learn<2.0,>=1.3->-r requirements.txt (line 28))
+  Using cached scipy-1.18.1-cp313-cp313-win_amd64.whl.metadata (61 kB)
+Collecting joblib>=1.4.0 (from scikit-learn<2.0,>=1.3->-r requirements.txt (line 28))
+  Using cached joblib-1.6.0-py3-none-any.whl.metadata (6.5 kB)
+Collecting narwhals>=2.0.1 (from scikit-learn<2.0,>=1.3->-r requirements.txt (line 28))
+  Using cached narwhals-2.29.0-py3-none-any.whl.metadata (15 kB)
+Collecting threadpoolctl>=3.5.0 (from scikit-learn<2.0,>=1.3->-r requirements.txt (line 28))
+  Using cached threadpoolctl-3.8.0-py3-none-any.whl.metadata (29 kB)
+Collecting aiohttp!=4.0.0a0,!=4.0.0a1 (from fsspec[http]<=2025.3.0,>=2023.1.0->datasets<4.0,>=2.20->-r requirements.txt (line 19))
+  Using cached aiohttp-3.14.5-cp313-cp313-win_amd64.whl.metadata (8.5 kB)
+Collecting aiohappyeyeballs>=2.5.0 (from aiohttp!=4.0.0a0,!=4.0.0a1->fsspec[http]<=2025.3.0,>=2023.1.0->datasets<4.0,>=2.20->-r requirements.txt (line 19))
+  Using cached aiohappyeyeballs-2.7.1-py3-none-any.whl.metadata (5.9 kB)
+Collecting aiosignal>=1.4.0 (from aiohttp!=4.0.0a0,!=4.0.0a1->fsspec[http]<=2025.3.0,>=2023.1.0->datasets<4.0,>=2.20->-r requirements.txt (line 19))
+  Using cached aiosignal-1.4.0-py3-none-any.whl.metadata (3.7 kB)
+Collecting attrs>=17.3.0 (from aiohttp!=4.0.0a0,!=4.0.0a1->fsspec[http]<=2025.3.0,>=2023.1.0->datasets<4.0,>=2.20->-r requirements.txt (line 19))
+  Using cached attrs-26.1.0-py3-none-any.whl.metadata (8.8 kB)
+Collecting frozenlist>=1.1.1 (from aiohttp!=4.0.0a0,!=4.0.0a1->fsspec[http]<=2025.3.0,>=2023.1.0->datasets<4.0,>=2.20->-r requirements.txt (line 19))
+  Using cached frozenlist-1.8.0-cp313-cp313-win_amd64.whl.metadata (21 kB)
+Collecting multidict<8.0,>=4.5 (from aiohttp!=4.0.0a0,!=4.0.0a1->fsspec[http]<=2025.3.0,>=2023.1.0->datasets<4.0,>=2.20->-r requirements.txt (line 19))
+  Using cached multidict-7.2.1-cp313-cp313-win_amd64.whl.metadata (6.3 kB)
+Collecting propcache>=0.2.0 (from aiohttp!=4.0.0a0,!=4.0.0a1->fsspec[http]<=2025.3.0,>=2023.1.0->datasets<4.0,>=2.20->-r requirements.txt (line 19))
+  Using cached propcache-0.5.4-cp313-cp313-win_amd64.whl.metadata (25 kB)
+Collecting yarl<2.0,>=1.25.1 (from aiohttp!=4.0.0a0,!=4.0.0a1->fsspec[http]<=2025.3.0,>=2023.1.0->datasets<4.0,>=2.20->-r requirements.txt (line 19))
+  Using cached yarl-1.25.1-cp313-cp313-win_amd64.whl.metadata (115 kB)
+Collecting idna>=2.0 (from yarl<2.0,>=1.25.1->aiohttp!=4.0.0a0,!=4.0.0a1->fsspec[http]<=2025.3.0,>=2023.1.0->datasets<4.0,>=2.20->-r requirements.txt (line 19))
+  Using cached idna-3.20-py3-none-any.whl.metadata (7.2 kB)
+Collecting cloudpickle>=3.0 (from joblib>=1.4.0->scikit-learn<2.0,>=1.3->-r requirements.txt (line 28))
+  Using cached cloudpickle-3.1.2-py3-none-any.whl.metadata (7.1 kB)
+Collecting charset_normalizer<4,>=2 (from requests->transformers<5.0,>=4.44->-r requirements.txt (line 14))
+  Using cached charset_normalizer-3.5.2-cp313-cp313-win_amd64.whl.metadata (47 kB)
+Collecting urllib3<3,>=1.26 (from requests->transformers<5.0,>=4.44->-r requirements.txt (line 14))
+  Using cached urllib3-2.8.0-py3-none-any.whl.metadata (7.4 kB)
+Collecting certifi>=2023.5.7 (from requests->transformers<5.0,>=4.44->-r requirements.txt (line 14))
+  Using cached certifi-2026.10.23-py3-none-any.whl.metadata (2.5 kB)
+Collecting mpmath<1.4,>=1.1.0 (from sympy>=1.13.3->torch<3.0,>=2.2->-r requirements.txt (line 25))
+  Using cached mpmath-1.3.0-py3-none-any.whl.metadata (8.6 kB)
+Collecting colorama (from tqdm>=4.27->transformers<5.0,>=4.44->-r requirements.txt (line 14))
+  Using cached colorama-0.4.6-py2.py3-none-any.whl.metadata (17 kB)
+Collecting MarkupSafe>=2.0 (from jinja2->torch<3.0,>=2.2->-r requirements.txt (line 25))
+  Using cached markupsafe-3.0.4-cp313-cp313-win_amd64.whl.metadata (2.8 kB)
+Using cached pandas-2.3.3-cp313-cp313-win_amd64.whl (11.0 MB)
+Using cached transformers-4.57.6-py3-none-any.whl (12.0 MB)
+Using cached datasets-3.6.0-py3-none-any.whl (491 kB)
+Using cached accelerate-1.16.0-py3-none-any.whl (389 kB)
+Using cached torch-2.15.0-cp313-cp313-win_amd64.whl (126.7 MB)
+Using cached scikit_learn-1.9.1-cp313-cp313-win_amd64.whl (8.2 MB)
+Using cached dill-0.3.8-py3-none-any.whl (116 kB)
+Using cached fsspec-2025.3.0-py3-none-any.whl (193 kB)
+Using cached huggingface_hub-0.36.2-py3-none-any.whl (566 kB)
+Using cached multiprocess-0.70.16-py312-none-any.whl (146 kB)
+Using cached tokenizers-0.22.2-cp39-abi3-win_amd64.whl (2.7 MB)
+Using cached aiohttp-3.14.5-cp313-cp313-win_amd64.whl (505 kB)
+Using cached multidict-7.2.1-cp313-cp313-win_amd64.whl (95 kB)
+Using cached yarl-1.25.1-cp313-cp313-win_amd64.whl (101 kB)
+Using cached aiohappyeyeballs-2.7.1-py3-none-any.whl (15 kB)
+Using cached aiosignal-1.4.0-py3-none-any.whl (7.5 kB)
+Using cached attrs-26.1.0-py3-none-any.whl (67 kB)
+Using cached frozenlist-1.8.0-cp313-cp313-win_amd64.whl (43 kB)
+Using cached idna-3.20-py3-none-any.whl (69 kB)
+Using cached joblib-1.6.0-py3-none-any.whl (306 kB)
+Using cached cloudpickle-3.1.2-py3-none-any.whl (22 kB)
+Using cached narwhals-2.29.0-py3-none-any.whl (501 kB)
+Using cached networkx-3.7-py3-none-any.whl (2.1 MB)
+Using cached numpy-2.5.5-cp313-cp313-win_amd64.whl (12.6 MB)
+Using cached packaging-26.3-py3-none-any.whl (129 kB)
+Using cached propcache-0.5.4-cp313-cp313-win_amd64.whl (45 kB)
+Using cached pyarrow-26.0.1-cp313-cp313-win_amd64.whl (29.0 MB)
+Using cached python_dateutil-4.0.0-py3-none-any.whl (92 kB)
+Using cached pytz-2026.6-py2.py3-none-any.whl (506 kB)
+Using cached pyyaml-6.0.3-cp313-cp313-win_amd64.whl (154 kB)
+Using cached regex-2026.11.18-cp313-cp313-win_amd64.whl (281 kB)
+Using cached requests-2.34.2-py3-none-any.whl (73 kB)
+Using cached charset_normalizer-3.5.2-cp313-cp313-win_amd64.whl (206 kB)
+Using cached urllib3-2.8.0-py3-none-any.whl (135 kB)
+Using cached certifi-2026.10.23-py3-none-any.whl (135 kB)
+Using cached safetensors-0.8.0-cp310-abi3-win_amd64.whl (355 kB)
+Using cached scipy-1.18.1-cp313-cp313-win_amd64.whl (36.6 MB)
+Using cached setuptools-84.2.1-py3-none-any.whl (876 kB)
+Using cached sympy-1.14.0-py3-none-any.whl (6.3 MB)
+Using cached mpmath-1.3.0-py3-none-any.whl (536 kB)
+Using cached threadpoolctl-3.8.0-py3-none-any.whl (32 kB)
+Using cached tqdm-4.70.1-py3-none-any.whl (80 kB)
+Using cached typing_extensions-4.16.0-py3-none-any.whl (45 kB)
+Using cached tzdata-2026.6-py2.py3-none-any.whl (348 kB)
+Using cached colorama-0.4.6-py2.py3-none-any.whl (25 kB)
+Using cached filelock-4.2.12-py3-none-any.whl (222 kB)
+Using cached jinja2-3.1.6-py3-none-any.whl (134 kB)
+Using cached markupsafe-3.0.4-cp313-cp313-win_amd64.whl (14 kB)
+Using cached psutil-7.2.2-cp37-abi3-win_amd64.whl (137 kB)
+Using cached xxhash-4.1.0-cp313-cp313-win_amd64.whl (47 kB)
+Installing collected packages: pytz, mpmath, xxhash, urllib3, tzdata, typing-extensions, threadpoolctl, sympy, setuptools, safetensors, regex, pyyaml, pyarrow, psutil, propcache, packaging, numpy, networkx, narwhals, multidict, MarkupSafe, idna, fsspec, frozenlist, filelock, dill, colorama, cloudpickle, charset_normalizer, certifi, attrs, aiohappyeyeballs, yarl, tqdm, scipy, requests, python-dateutil, multiprocess, joblib, jinja2, aiosignal, torch, scikit-learn, pandas, huggingface-hub, aiohttp, tokenizers, accelerate, transformers, datasets
+
+Successfully installed MarkupSafe-3.0.4 accelerate-1.16.0 aiohappyeyeballs-2.7.1 aiohttp-3.14.5 aiosignal-1.4.0 attrs-26.1.0 certifi-2026.10.23 charset_normalizer-3.5.2 cloudpickle-3.1.2 colorama-0.4.6 datasets-3.6.0 dill-0.3.8 filelock-4.2.12 frozenlist-1.8.0 fsspec-2025.3.0 huggingface-hub-0.36.2 idna-3.20 jinja2-3.1.6 joblib-1.6.0 mpmath-1.3.0 multidict-7.2.1 multiprocess-0.70.16 narwhals-2.29.0 networkx-3.7 numpy-2.5.5 packaging-26.3 pandas-2.3.3 propcache-0.5.4 psutil-7.2.2 pyarrow-26.0.1 python-dateutil-4.0.0 pytz-2026.6 pyyaml-6.0.3 regex-2026.11.18 requests-2.34.2 safetensors-0.8.0 scikit-learn-1.9.1 scipy-1.18.1 setuptools-84.2.1 sympy-1.14.0 threadpoolctl-3.8.0 tokenizers-0.22.2 torch-2.15.0 tqdm-4.70.1 transformers-4.57.6 typing-extensions-4.16.0 tzdata-2026.6 urllib3-2.8.0 xxhash-4.1.0 yarl-1.25.1
+
+[notice] A new release of pip is available: 25.2 -> 26.3
+[notice] To update, run: python.exe -m pip install --upgrade pip
+No trained model at 
+C:\Users\delon\AppData\Local\Temp\takemeter_c4\clonetest_t2\ai201-project3-takemeter-starter-v2026\models\takemeter. 
+Training one first (~2 min on CPU)...
+Some weights of DistilBertForSequenceClassification were not initialized from the model checkpoint at 
+distilbert-base-uncased and are newly initialized: ['classifier.bias', 'classifier.weight', 'pre_classifier.bias', 
+'pre_classifier.weight']
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+
+Map:   0%|          | 0/139 [00:00<?, ? examples/s]
+Map: 100%|##########| 139/139 [00:00<00:00, 7652.23 examples/s]
+
+Map:   0%|          | 0/31 [00:00<?, ? examples/s]
+Map: 100%|##########| 31/31 [00:00<00:00, 7218.71 examples/s]
+
+  0%|          | 0/90 [00:00<?, ?it/s]C:\Users\delon\AppData\Local\Temp\takemeter_c4\clonetest_t2\ai201-project3-takeme
+ter-starter-v2026\.venv\Lib\site-packages\torch\utils\data\dataloader.py:759: UserWarning: 'pin_memory' argument is 
+set as true but no accelerator is found, then device pinned memory won't be used.
+  super().__init__(loader)
+
+  1%|1         | 1/90 [00:01<02:14,  1.51s/it]
+  2%|2         | 2/90 [00:02<02:07,  1.45s/it]
+  3%|3         | 3/90 [00:04<02:03,  1.42s/it]
+  4%|4         | 4/90 [00:05<02:00,  1.40s/it]
+  6%|5         | 5/90 [00:07<01:57,  1.38s/it]
+  7%|6         | 6/90 [00:08<01:55,  1.38s/it]
+  8%|7         | 7/90 [00:09<01:53,  1.37s/it]
+  9%|8         | 8/90 [00:11<01:51,  1.36s/it]
+ 10%|#         | 9/90 [00:12<01:39,  1.22s/it]
+
+  0%|          | 0/2 [00:00<?, ?it/s][A
+
+100%|##########| 2/2 [00:00<00:00,  7.60it/s][A
+                                              
+
+
+                                             
+[A
+ 10%|#         | 9/90 [00:12<01:39,  1.22s/it]
+
+100%|##########| 2/2 [00:00<00:00,  7.60it/s][A
+
+                                             [AC:\Users\delon\AppData\Local\Temp\takemeter_c4\clonetest_t2\ai201-proje
+ct3-takemeter-starter-v2026\.venv\Lib\site-packages\torch\utils\data\dataloader.py:759: UserWarning: 'pin_memory' 
+argument is set as true but no accelerator is found, then device pinned memory won't be used.
+  super().__init__(loader)
+
+ 11%|#1        | 10/90 [00:13<01:54,  1.44s/it]
+                                               
+
+ 11%|#1        | 10/90 [00:13<01:54,  1.44s/it]
+ 12%|#2        | 11/90 [00:15<01:51,  1.42s/it]
+ 13%|#3        | 12/90 [00:16<01:48,  1.39s/it]
+ 14%|#4        | 13/90 [00:17<01:46,  1.38s/it]
+ 16%|#5        | 14/90 [00:19<01:44,  1.37s/it]
+ 17%|#6        | 15/90 [00:20<01:45,  1.40s/it]
+ 18%|#7        | 16/90 [00:22<01:41,  1.37s/it]
+ 19%|#8        | 17/90 [00:23<01:41,  1.39s/it]
+{'eval_loss': 1.2041285037994385, 'eval_accuracy': 0.6129032258064516, 'eval_runtime': 0.5671, 'eval_samples_per_second': 54.666, 'eval_steps_per_second': 3.527, 'epoch': 1.0}
+{'loss': 1.3118, 'grad_norm': 3.1563632488250732, 'learning_rate': 1.8e-05, 'epoch': 1.11}
+ 20%|##        | 18/90 [00:24<01:30,  1.25s/it]
+
+  0%|          | 0/2 [00:00<?, ?it/s][A
+
+100%|##########| 2/2 [00:00<00:00,  7.59it/s][A
+                                               
+
+
+                                             
+[A
+ 20%|##        | 18/90 [00:25<01:30,  1.25s/it]
+
+100%|##########| 2/2 [00:00<00:00,  7.59it/s][A
+
+                                             [AC:\Users\delon\AppData\Local\Temp\takemeter_c4\clonetest_t2\ai201-proje
+ct3-takemeter-starter-v2026\.venv\Lib\site-packages\torch\utils\data\dataloader.py:759: UserWarning: 'pin_memory' 
+argument is set as true but no accelerator is found, then device pinned memory won't be used.
+  super().__init__(loader)
+
+ 21%|##1       | 19/90 [00:26<01:42,  1.44s/it]
+ 22%|##2       | 20/90 [00:27<01:38,  1.41s/it]
+                                               
+
+ 22%|##2       | 20/90 [00:27<01:38,  1.41s/it]
+ 23%|##3       | 21/90 [00:29<01:37,  1.41s/it]
+ 24%|##4       | 22/90 [00:30<01:36,  1.42s/it]
+ 26%|##5       | 23/90 [00:31<01:33,  1.40s/it]
+ 27%|##6       | 24/90 [00:33<01:30,  1.38s/it]
+ 28%|##7       | 25/90 [00:34<01:28,  1.37s/it]
+ 29%|##8       | 26/90 [00:35<01:26,  1.36s/it]
+{'eval_loss': 1.0478804111480713, 'eval_accuracy': 0.6129032258064516, 'eval_runtime': 0.5671, 'eval_samples_per_second': 54.666, 'eval_steps_per_second': 3.527, 'epoch': 2.0}
+ 30%|###       | 27/90 [00:36<01:17,  1.22s/it]
+{'loss': 1.1313, 'grad_norm': 2.7988343238830566, 'learning_rate': 1.577777777777778e-05, 'epoch': 2.22}
+
+  0%|          | 0/2 [00:00<?, ?it/s][A
+
+100%|##########| 2/2 [00:00<00:00,  7.39it/s][A
+                                               
+
+
+                                             
+[A
+ 30%|###       | 27/90 [00:37<01:17,  1.22s/it]
+
+100%|##########| 2/2 [00:00<00:00,  7.39it/s][A
+
+                                             [AC:\Users\delon\AppData\Local\Temp\takemeter_c4\clonetest_t2\ai201-proje
+ct3-takemeter-starter-v2026\.venv\Lib\site-packages\torch\utils\data\dataloader.py:759: UserWarning: 'pin_memory' 
+argument is set as true but no accelerator is found, then device pinned memory won't be used.
+  super().__init__(loader)
+
+ 31%|###1      | 28/90 [00:38<01:28,  1.44s/it]
+ 32%|###2      | 29/90 [00:40<01:25,  1.41s/it]
+ 33%|###3      | 30/90 [00:41<01:23,  1.39s/it]
+                                               
+
+ 33%|###3      | 30/90 [00:41<01:23,  1.39s/it]
+ 34%|###4      | 31/90 [00:42<01:21,  1.38s/it]
+ 36%|###5      | 32/90 [00:44<01:18,  1.36s/it]
+ 37%|###6      | 33/90 [00:45<01:16,  1.35s/it]
+ 38%|###7      | 34/90 [00:46<01:14,  1.33s/it]
+ 39%|###8      | 35/90 [00:48<01:13,  1.33s/it]
+{'eval_loss': 0.9858537912368774, 'eval_accuracy': 0.6129032258064516, 'eval_runtime': 0.5784, 'eval_samples_per_second': 53.597, 'eval_steps_per_second': 3.458, 'epoch': 3.0}
+{'loss': 0.9733, 'grad_norm': 2.2160041332244873, 'learning_rate': 1.3555555555555557e-05, 'epoch': 3.33}
+ 40%|####      | 36/90 [00:48<01:05,  1.20s/it]
+
+  0%|          | 0/2 [00:00<?, ?it/s][A
+
+100%|##########| 2/2 [00:00<00:00,  7.07it/s][A
+                                               
+
+
+                                             
+[A
+ 40%|####      | 36/90 [00:49<01:05,  1.20s/it]
+
+100%|##########| 2/2 [00:00<00:00,  7.07it/s][A
+
+                                             [AC:\Users\delon\AppData\Local\Temp\takemeter_c4\clonetest_t2\ai201-proje
+ct3-takemeter-starter-v2026\.venv\Lib\site-packages\torch\utils\data\dataloader.py:759: UserWarning: 'pin_memory' 
+argument is set as true but no accelerator is found, then device pinned memory won't be used.
+  super().__init__(loader)
+
+ 41%|####1     | 37/90 [00:50<01:16,  1.45s/it]
+ 42%|####2     | 38/90 [00:52<01:13,  1.41s/it]
+ 43%|####3     | 39/90 [00:53<01:10,  1.38s/it]
+ 44%|####4     | 40/90 [00:54<01:07,  1.35s/it]
+                                               
+
+ 44%|####4     | 40/90 [00:54<01:07,  1.35s/it]
+ 46%|####5     | 41/90 [00:56<01:05,  1.33s/it]
+ 47%|####6     | 42/90 [00:57<01:03,  1.31s/it]
+ 48%|####7     | 43/90 [00:58<01:01,  1.30s/it]
+ 49%|####8     | 44/90 [01:00<00:59,  1.30s/it]
+{'eval_loss': 0.9538323879241943, 'eval_accuracy': 0.6129032258064516, 'eval_runtime': 0.6213, 'eval_samples_per_second': 49.895, 'eval_steps_per_second': 3.219, 'epoch': 4.0}
+{'loss': 0.9135, 'grad_norm': 2.203150749206543, 'learning_rate': 1.1333333333333334e-05, 'epoch': 4.44}
+ 50%|#####     | 45/90 [01:00<00:53,  1.18s/it]
+
+  0%|          | 0/2 [00:00<?, ?it/s][A
+
+100%|##########| 2/2 [00:00<00:00,  7.59it/s][A
+                                               
+
+
+                                             
+[A
+ 50%|#####     | 45/90 [01:01<00:53,  1.18s/it]
+
+100%|##########| 2/2 [00:00<00:00,  7.59it/s][A
+
+                                             [AC:\Users\delon\AppData\Local\Temp\takemeter_c4\clonetest_t2\ai201-proje
+ct3-takemeter-starter-v2026\.venv\Lib\site-packages\torch\utils\data\dataloader.py:759: UserWarning: 'pin_memory' 
+argument is set as true but no accelerator is found, then device pinned memory won't be used.
+  super().__init__(loader)
+
+ 51%|#####1    | 46/90 [01:02<01:00,  1.37s/it]
+ 52%|#####2    | 47/90 [01:04<00:57,  1.34s/it]
+ 53%|#####3    | 48/90 [01:05<00:55,  1.32s/it]
+ 54%|#####4    | 49/90 [01:06<00:53,  1.31s/it]
+ 56%|#####5    | 50/90 [01:07<00:52,  1.30s/it]
+                                               
+
+ 56%|#####5    | 50/90 [01:07<00:52,  1.30s/it]
+ 57%|#####6    | 51/90 [01:09<00:50,  1.30s/it]
+ 58%|#####7    | 52/90 [01:10<00:49,  1.29s/it]
+ 59%|#####8    | 53/90 [01:11<00:47,  1.29s/it]
+{'eval_loss': 0.9228578209877014, 'eval_accuracy': 0.6129032258064516, 'eval_runtime': 0.5654, 'eval_samples_per_second': 54.833, 'eval_steps_per_second': 3.538, 'epoch': 5.0}
+{'loss': 0.8222, 'grad_norm': 3.2914328575134277, 'learning_rate': 9.111111111111112e-06, 'epoch': 5.56}
+ 60%|######    | 54/90 [01:12<00:42,  1.17s/it]
+
+  0%|          | 0/2 [00:00<?, ?it/s][A
+
+100%|##########| 2/2 [00:00<00:00,  7.66it/s][A
+                                               
+
+
+                                             
+[A
+ 60%|######    | 54/90 [01:13<00:42,  1.17s/it]
+
+100%|##########| 2/2 [00:00<00:00,  7.66it/s][A
+
+                                             [AC:\Users\delon\AppData\Local\Temp\takemeter_c4\clonetest_t2\ai201-proje
+ct3-takemeter-starter-v2026\.venv\Lib\site-packages\torch\utils\data\dataloader.py:759: UserWarning: 'pin_memory' 
+argument is set as true but no accelerator is found, then device pinned memory won't be used.
+  super().__init__(loader)
+
+ 61%|######1   | 55/90 [01:14<00:48,  1.37s/it]
+ 62%|######2   | 56/90 [01:15<00:45,  1.34s/it]
+ 63%|######3   | 57/90 [01:17<00:44,  1.33s/it]
+ 64%|######4   | 58/90 [01:18<00:42,  1.34s/it]
+ 66%|######5   | 59/90 [01:19<00:41,  1.35s/it]
+ 67%|######6   | 60/90 [01:21<00:39,  1.33s/it]
+                                               
+
+ 67%|######6   | 60/90 [01:21<00:39,  1.33s/it]
+ 68%|######7   | 61/90 [01:22<00:38,  1.32s/it]
+ 69%|######8   | 62/90 [01:23<00:36,  1.31s/it]
+{'eval_loss': 0.8996063470840454, 'eval_accuracy': 0.6451612903225806, 'eval_runtime': 0.564, 'eval_samples_per_second': 54.969, 'eval_steps_per_second': 3.546, 'epoch': 6.0}
+{'loss': 0.7179, 'grad_norm': 2.6256046295166016, 'learning_rate': 6.88888888888889e-06, 'epoch': 6.67}
+ 70%|#######   | 63/90 [01:24<00:32,  1.19s/it]
+
+  0%|          | 0/2 [00:00<?, ?it/s][A
+
+100%|##########| 2/2 [00:00<00:00,  7.64it/s][A
+                                               
+
+
+                                             
+[A
+ 70%|#######   | 63/90 [01:25<00:32,  1.19s/it]
+
+100%|##########| 2/2 [00:00<00:00,  7.64it/s][A
+
+                                             [AC:\Users\delon\AppData\Local\Temp\takemeter_c4\clonetest_t2\ai201-proje
+ct3-takemeter-starter-v2026\.venv\Lib\site-packages\torch\utils\data\dataloader.py:759: UserWarning: 'pin_memory' 
+argument is set as true but no accelerator is found, then device pinned memory won't be used.
+  super().__init__(loader)
+
+ 71%|#######1  | 64/90 [01:26<00:36,  1.40s/it]
+ 72%|#######2  | 65/90 [01:27<00:34,  1.37s/it]
+ 73%|#######3  | 66/90 [01:29<00:32,  1.35s/it]
+ 74%|#######4  | 67/90 [01:30<00:30,  1.32s/it]
+ 76%|#######5  | 68/90 [01:31<00:28,  1.31s/it]
+ 77%|#######6  | 69/90 [01:32<00:27,  1.30s/it]
+ 78%|#######7  | 70/90 [01:34<00:25,  1.30s/it]
+                                               
+
+ 78%|#######7  | 70/90 [01:34<00:25,  1.30s/it]
+ 79%|#######8  | 71/90 [01:35<00:24,  1.30s/it]
+{'eval_loss': 0.8830308318138123, 'eval_accuracy': 0.6774193548387096, 'eval_runtime': 0.5707, 'eval_samples_per_second': 54.323, 'eval_steps_per_second': 3.505, 'epoch': 7.0}
+{'loss': 0.7441, 'grad_norm': 2.5002012252807617, 'learning_rate': 4.666666666666667e-06, 'epoch': 7.78}
+ 80%|########  | 72/90 [01:36<00:21,  1.19s/it]
+
+  0%|          | 0/2 [00:00<?, ?it/s][A
+
+100%|##########| 2/2 [00:00<00:00,  7.71it/s][A
+                                               
+
+
+                                             
+[A
+ 80%|########  | 72/90 [01:36<00:21,  1.19s/it]
+
+100%|##########| 2/2 [00:00<00:00,  7.71it/s][A
+
+                                             [AC:\Users\delon\AppData\Local\Temp\takemeter_c4\clonetest_t2\ai201-proje
+ct3-takemeter-starter-v2026\.venv\Lib\site-packages\torch\utils\data\dataloader.py:759: UserWarning: 'pin_memory' 
+argument is set as true but no accelerator is found, then device pinned memory won't be used.
+  super().__init__(loader)
+
+ 81%|########1 | 73/90 [01:38<00:23,  1.38s/it]
+ 82%|########2 | 74/90 [01:39<00:21,  1.35s/it]
+ 83%|########3 | 75/90 [01:40<00:19,  1.33s/it]
+ 84%|########4 | 76/90 [01:42<00:18,  1.32s/it]
+ 86%|########5 | 77/90 [01:43<00:17,  1.31s/it]
+ 87%|########6 | 78/90 [01:44<00:15,  1.30s/it]
+ 88%|########7 | 79/90 [01:45<00:14,  1.30s/it]
+ 89%|########8 | 80/90 [01:47<00:12,  1.29s/it]
+                                               
+
+ 89%|########8 | 80/90 [01:47<00:12,  1.29s/it]
+{'eval_loss': 0.8729566335678101, 'eval_accuracy': 0.6451612903225806, 'eval_runtime': 0.565, 'eval_samples_per_second': 54.866, 'eval_steps_per_second': 3.54, 'epoch': 8.0}
+{'loss': 0.6377, 'grad_norm': 2.5589561462402344, 'learning_rate': 2.4444444444444447e-06, 'epoch': 8.89}
+ 90%|######### | 81/90 [01:48<00:10,  1.18s/it]
+
+  0%|          | 0/2 [00:00<?, ?it/s][A
+
+100%|##########| 2/2 [00:00<00:00,  7.66it/s][A
+                                               
+
+
+                                             
+[A
+ 90%|######### | 81/90 [01:48<00:10,  1.18s/it]
+
+100%|##########| 2/2 [00:00<00:00,  7.66it/s][A
+
+                                             [AC:\Users\delon\AppData\Local\Temp\takemeter_c4\clonetest_t2\ai201-proje
+ct3-takemeter-starter-v2026\.venv\Lib\site-packages\torch\utils\data\dataloader.py:759: UserWarning: 'pin_memory' 
+argument is set as true but no accelerator is found, then device pinned memory won't be used.
+  super().__init__(loader)
+
+ 91%|#########1| 82/90 [01:49<00:11,  1.38s/it]
+ 92%|#########2| 83/90 [01:51<00:09,  1.35s/it]
+ 93%|#########3| 84/90 [01:52<00:07,  1.33s/it]
+ 94%|#########4| 85/90 [01:53<00:06,  1.32s/it]
+ 96%|#########5| 86/90 [01:55<00:05,  1.31s/it]
+ 97%|#########6| 87/90 [01:56<00:03,  1.30s/it]
+ 98%|#########7| 88/90 [01:57<00:02,  1.30s/it]
+ 99%|#########8| 89/90 [01:58<00:01,  1.29s/it]
+100%|##########| 90/90 [01:59<00:00,  1.18s/it]
+                                               
+
+{'eval_loss': 0.870675265789032, 'eval_accuracy': 0.6451612903225806, 'eval_runtime': 0.5659, 'eval_samples_per_second': 54.784, 'eval_steps_per_second': 3.534, 'epoch': 9.0}
+{'loss': 0.6346, 'grad_norm': 5.250848293304443, 'learning_rate': 2.2222222222222224e-07, 'epoch': 10.0}
+100%|##########| 90/90 [01:59<00:00,  1.18s/it]
+
+  0%|          | 0/2 [00:00<?, ?it/s][A
+
+100%|##########| 2/2 [00:00<00:00,  7.69it/s][A
+                                               
+
+
+                                             
+[A
+100%|##########| 90/90 [02:00<00:00,  1.18s/it]
+
+100%|##########| 2/2 [00:00<00:00,  7.69it/s][A
+
+                                             [A
+                                               
+
+100%|##########| 90/90 [02:00<00:00,  1.18s/it]
+100%|##########| 90/90 [02:00<00:00,  1.34s/it]
+{'eval_loss': 0.8682378530502319, 'eval_accuracy': 0.6451612903225806, 'eval_runtime': 0.5708, 'eval_samples_per_second': 54.314, 'eval_steps_per_second': 3.504, 'epoch': 10.0}
+{'train_runtime': 120.456, 'train_samples_per_second': 11.539, 'train_steps_per_second': 0.747, 'train_loss': 0.8762749460008409, 'epoch': 10.0}
+
+Map:   0%|          | 0/30 [00:00<?, ? examples/s]
+Map: 100%|##########| 30/30 [00:00<00:00, 4821.96 examples/s]
+C:\Users\delon\AppData\Local\Temp\takemeter_c4\clonetest_t2\ai201-project3-takemeter-starter-v2026\.venv\Lib\site-packa
+ges\torch\utils\data\dataloader.py:759: UserWarning: 'pin_memory' argument is set as true but no accelerator is found, 
+then device pinned memory won't be used.
+  super().__init__(loader)
+
+  0%|          | 0/2 [00:00<?, ?it/s]
+100%|##########| 2/2 [00:00<00:00,  8.13it/s]
+100%|##########| 2/2 [00:00<00:00,  8.09it/s]
+
+Saved model to C:\Users\delon\AppData\Local\Temp\takemeter_c4\clonetest_t2\ai201-project3-takemeter-starter-v2026\models\takemeter
+test accuracy 0.700  macro F1 0.379  (122.5s on cpu)
+hot_take     0.61     31.0 ms  Canelo has been ducking Benavidez for years
+
+1 post(s) ╖ load 56 ms ╖ inference 31 ms (31.0 ms/post) ╖ cpu ╖ run a7b09103
+Logged to C:\Users\delon\AppData\Local\Temp\takemeter_c4\clonetest_t2\ai201-project3-takemeter-starter-v2026\logs\classify_log.jsonl
+
+=== C4 t2 summary ===
+folder: C:\Users\delon\AppData\Local\Temp\takemeter_c4\clonetest_t2
+exit code of last line: 0
+seconds, all six lines: 304.9
+log lines in clone: 1
+last log line status: 
+test_accuracy: 0.7
+
+=== C4 t2 summary (recomputed after harness fix, from the same clone; not re-run) ===
+log lines in clone: 1
+last log line status: ok
+test_accuracy: 0.7

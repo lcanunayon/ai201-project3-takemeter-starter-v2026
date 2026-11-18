@@ -1,0 +1,11 @@
+run,run_id,status,exit_code,wall_ms,process_ms,model_load_ms,duration_ms,output
+1,f76a8e88,ok,0,6492.4,5792.8,134.3,42.1,hot_take
+2,dbd0fcb8,ok,0,6510.4,5800.2,137.3,59.0,hot_take
+3,870a368d,ok,0,6484.2,5760.0,135.5,32.0,hot_take
+4,5d5eb85d,ok,0,6468.7,5765.1,135.3,33.6,hot_take
+5,5a45aebc,ok,0,6607.8,5888.0,136.1,33.3,hot_take
+6,b392b08c,ok,0,6639.2,5883.8,132.9,35.6,hot_take
+7,46866d7c,ok,0,6514.2,5810.5,139.7,33.0,hot_take
+8,3c509d9e,ok,0,6489.8,5797.4,146.0,47.3,hot_take
+9,078eb134,ok,0,6485.6,5790.8,142.5,41.1,hot_take
+10,c2793b9b,ok,0,6511.2,5819.3,136.2,32.3,hot_take

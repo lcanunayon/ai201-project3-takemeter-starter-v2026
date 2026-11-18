@@ -402,8 +402,68 @@ Logged to logs\trials\c5_t3.jsonl
 
 ### Verdicts and diagnoses
 
-<!-- Milestone 6: Met/Missed against each target is in the table above. For
-     each miss (C4), which part of the system failed and how. -->
+Each verdict is against the target set in Milestone 4, from the before-fix run
+above. A target has to hold in all three trials.
+
+| Criterion | Verdict | Why |
+|---|---|---|
+| C1. Agrees with the notebook | **MET** | 0.700 in 3 of 3, all inside 0.667–0.733 |
+| C2. Always leaves a record | **MET** | 7 of 7 records with the right `status`, in 3 of 3 |
+| C3. Cost per run | **MET** | Means of 6.83 / 6.54 / 6.53 s (≤ 10 s) and 44 / 40 / 39 ms (≤ 200 ms) |
+| C4. Clean checkout | **MISSED** | 13 log lines in every clone, against "exactly 1" |
+| C5. Multi-line posts stay whole | **MET** | 9/9, 38/38 and 4/4 records = posts, every input exact |
+
+#### C4 diagnosis
+
+- **What failed:** all three clones exited 0, auto-trained to 0.700 and appended
+  one `ok` record. So the classifier, the auto-train and the logging all worked.
+  But each clone's `logs/classify_log.jsonl` had **13** lines, and the 12 that
+  weren't the user's were mine: the 2026-11-14 run record.
+- **The stage:** the log, specifically where `classify.py` → `append_log()`
+  writes and what ships in a checkout. The model and the CLI logic aren't
+  involved.
+- **The mechanism:** one file had two jobs. `logs/classify_log.jsonl` was both
+  the **committed run record** (Path B's evidence, committed in `faaa540`) and
+  the **live log** that `append_log()` opens in append mode (`"a"`). Committing
+  the record put my 12 lines into every clone, and appending added the user's
+  run after them, at line 13.
+- **It was getting worse:** committing the log again in `6dce70e` grew it to 42
+  lines. A clone made after that would have had 43.
+- **The criterion assumed** a checkout starts with an empty log. The repo made
+  that false.
+
+**Why this is a system defect, not just a strict rule:** a reader on a fresh
+clone can't tell their runs from mine, and any count over their own log (like
+C2's) would be off by 12. So I fixed the system and **left the criterion
+unchanged**. Rewording it to "the *last* line is `ok`" would have turned a real
+miss into a pass.
+
+#### A pattern: one stage, two symptoms
+
+The trials found one other problem outside the criteria. `requirements.txt`
+gives ranges, not pins, so the clones got torch 2.15.0 and accelerate 1.16.0,
+not the versions RUNNING.md says were tested. Both problems trace to the same
+stage: **what a checkout ships with.**
+- The C4 miss is a file in the repo that shouldn't travel with it: my log.
+- The version drift is a constraint that should travel with it and doesn't:
+  exact versions.
+
+In both, the clone isn't the environment I tested. I fixed the first, the C4
+miss, because it's the one a criterion caught. The second is under What's left.
+
+#### Were the targets set low?
+
+Partly, yes. After the fix all five are met, and two targets have more slack
+than they need:
+- **C3 is the loosest. I'd tighten it from ≤ 10 s to: mean wall-clock ≤ 7.5 s,
+  and no single run over 8 s.** Across 60 timed runs (before and after), the
+  trial means were 6.52–6.86 s and the slowest single run was 7.22 s. Ten
+  seconds leaves about 50% headroom, so a large slowdown would still pass.
+- **C1's ±1-post slack turned out to be unnecessary.** Training is bit-for-bit
+  deterministic (the same weight hash 6 of 6 times), so I'd tighten it to "the
+  same label as the notebook on all 30 posts".
+- **C2 and C5 are already 100%**, and can't go higher.
+- **C4 had no slack at all.** That's why it caught a real defect.
 
 ### Instrumentation
 
@@ -494,7 +554,66 @@ Hardware: CPU only (`device: cpu`), Windows 11, Python 3.13.7, torch 2.14.1+cpu,
 
 ### The improvement
 
-<!-- TODO: one change, re-run, before and after side by side. -->
+**One change, aimed at the C4 diagnosis: separate the run record from the live
+log** (`114ab2a`).
+- `git mv logs/classify_log.jsonl logs/run_record.jsonl`: the committed run
+  record is now a frozen file, nothing appends to it, and it's still committed,
+  as Path B requires.
+- `logs/classify_log.jsonl` is added to `.gitignore`, so it's the live log
+  only, and every checkout starts without one.
+- **No change** to `classify.py`, to any criterion, or to the trial procedure.
+
+**Re-run:** the full set again, all five criteria, three trials each, the same
+way. That's `TRIALS_DIR=logs/trials_after bash run_trials.sh t1|t2|t3` and
+`run_c4.ps1 tk -Out logs	rials_after`, 2026-11-17 22:53–23:16, after the fix
+was pushed, since C4 clones from GitHub. Raw output is in
+[logs/trials_after/](logs/trials_after/).
+
+#### Run Log — Before vs. After
+
+| Criterion | Target | Before: Run 1 / 2 / 3 | Before | After: Run 1 / 2 / 3 | After |
+|---|---|---|---|---|---|
+| 1. Agrees with the notebook | 0.667–0.733 | 0.700 / 0.700 / 0.700 | **MET** | 0.700 / 0.700 / 0.700 | **MET** |
+| 2. Always leaves a record | 5/5 runs, 7 records | 5/5 / 5/5 / 5/5 | **MET** | 5/5 / 5/5 / 5/5 | **MET** |
+| 3. Cost per run | ≤ 10 s, ≤ 200 ms | 6.83 s·44 ms / 6.54 s·40 ms / 6.53 s·39 ms | **MET** | 6.61 s·39 ms / 6.52 s·39 ms / 6.85 s·40 ms | **MET** |
+| 4. Clean checkout | exit 0, exactly 1 line `ok`, 0.7 | 13 lines / 13 / 13 | **MISSED** | **1 line `ok`** / 1 / 1 | **MET** |
+| 5. Multi-line posts stay whole | records = posts | 9/9 / 38/38 / 4/4 | **MET** | 9/9 / 38/38 / 4/4 | **MET** |
+
+**Did it help?** Yes, for exactly what it targeted. C4 went from MISSED to MET:
+each clone's log now holds one line, the user's own:
+
+```jsonl
+{"timestamp": "2026-11-17T23:15:42.892-06:00", "run_id": "a7b09103", "status": "ok", "input": "Canelo has been ducking Benavidez for years", "input_tokens": 13, "truncated": false, "output": "hot_take", "confidence": 0.6124, "scores": {"hot_take": 0.6124, "informative": 0.1191, "humorous": 0.2042, "offensive": 0.0643}, "duration_ms": 31.0, "model_load_ms": 55.9, "process_ms": 135372.9, "device": "cpu", "model": "models\\takemeter"}
+```
+
+(`logs/trials_after/c4_t2_clone_log.jsonl`, the whole file.)
+
+**Nothing else moved, which is what a log-location change should do.**
+- C1 and C5 are identical.
+- C3 is within noise: the after means span 6.52–6.85 s, the before means
+  6.53–6.83 s.
+- C4's setup got faster (841 / 420 / 364 s before, 302 / 305 / 293 s after).
+  That's pip's warm cache, not the fix.
+
+**The trade-off:**
+- **The live log is no longer versioned.** Runs a user does stay on their
+  machine unless they copy them into the record on purpose.
+- **The run record is now a manual snapshot.** Updating it is a deliberate
+  copy, not a side effect of running the tool.
+
+That's the point of the fix, but it's a real cost: before, every run I made was
+automatically evidence. Now I have to choose what's evidence.
+
+**Two harness bugs surfaced in the after run,** both in `run_c4.ps1`, not in
+the system, and fixed in the next commit:
+1. `$out` and `$Out` are the same variable in PowerShell, because names aren't
+   case-sensitive, so the copy step got a broken path.
+2. With exactly one log line, `$lines = if (...) { @(...) }` unrolled to a
+   plain string, so the status read as blank.
+
+Both only show up when the log has a single line, which never happened before
+the fix. The clones had already run. I recomputed the summaries from the same
+clone folders without re-running, and each `c4_tk_out.txt` labels that block.
 
 ### What's left
 

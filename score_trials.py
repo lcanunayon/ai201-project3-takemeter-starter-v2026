@@ -72,8 +72,9 @@ def c4(k):
     if not out.exists():
         return False, "not run"
     text = out.read_text(encoding="utf-8", errors="replace").replace(chr(13), chr(10))
-    get = lambda key: next((l.split(":", 1)[1].strip() for l in text.splitlines()
-                            if l.startswith(key)), "")
+    # Last occurrence: a summary recomputed after a harness fix is appended below.
+    get = lambda key: ([l.split(":", 1)[1].strip() for l in text.splitlines()
+                        if l.startswith(key)] or [""])[-1]
     code, lines, status, acc = (get("exit code of last line"), get("log lines in clone"),
                                 get("last log line status"), get("test_accuracy"))
     acc = acc.rstrip(chr(0xFFFD) + " " + chr(10))
