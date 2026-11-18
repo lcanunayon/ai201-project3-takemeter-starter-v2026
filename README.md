@@ -94,34 +94,117 @@ content is the same.
 
 ### Acceptance criteria
 
-Written 2026-11-17, before any trial was run, and committed on their own so the
-history shows the order. All five are about the extension, the CLI. None of
-them re-tests how accurate the classifier is: that was project 3's job. Each
-criterion gets **three trials**, defined below, and it's **met only if all three
+Written 2026-11-17, before any trial was run. All five are about the extension,
+the CLI. None of them re-tests how accurate the classifier is: that was project
+3's job. Each criterion gets **three trials** and is **met only if all three
 trials hit the target**.
 
-| # | Criterion | Target | One trial is |
-|---|---|---|---|
-| **C1** | **Agrees with the notebook.** The CLI gives the same answers as the notebook's model it claims to reproduce | Accuracy on the 30 posts in `test_split.csv` equals the notebook's seed 42 result, **0.700, within ±1 post (0.667–0.733)** | A fresh `python classify.py train`, then `python classify.py classify --csv test_split.csv`, scored from `correct` in the log |
-| **C2** | **Always leaves a record.** Every run, including a failed one, writes a log record | **5 of 5 runs** each write exactly one record per post (or one per failed run) with `timestamp`, `input`, `output`, `status` and a duration, and the `status` is right (`ok` / `rejected` / `error`) | A fixed suite of 5 runs: one post, a 3-post CSV, a blank post, a missing file, and a run with the model file hidden |
-| **C3** | **Cost.** One run is cheap enough to use by hand | **Mean wall-clock ≤ 10 s per single-post run** over 10 runs on CPU, **and mean inference (`duration_ms`) ≤ 200 ms** | `python measure_cost.py`: 10 separate single-post runs |
-| **C4** | **Clean checkout.** Someone with only RUNNING.md can get a labelled post | The six documented setup lines, run in an **empty folder**, end with **exit code 0** and **one `ok` record** in the log, with **no extra manual steps**. The auto-trained model's test accuracy is 0.700 | A fresh `git clone` into a new empty folder, following RUNNING.md exactly |
-| **C5** | **Multi-line posts stay whole.** A post that spans several lines comes back as one label | **Records = posts, exactly** (no fragments), and every record's `input` equals the original post, newlines included | `--csv` on a CSV of multi-line posts. Three different sets: the 9 in `test_split.csv`, the 38 in `labels.csv`, and the multi-line posts in `data/unlabelled_posts.csv` |
+**Self-checked before any trial.** I asked of each one: could a person who can't
+ask me what I meant run it and score it? The first draft (`62de4d1`) failed that
+test in every criterion: unclear record counting, an unnamed CSV, an undefined
+"hide the model", and so on. This version spells out exactly what to run, what to
+count and what passes. The targets didn't change.
 
-**Why these numbers:**
-- **C1** allows one post of slack (1/30 = 0.033). The CLI tokenizes without
-  padding to 128, so a borderline post could flip on rounding. More than one
-  flip would mean it isn't the same model.
-- **C2** has to be 100%. A log that misses some runs is the failure Milestone 3
-  warns about: "a failure that shows up only as an absence".
-- **C3:** I measured about 6.4 s once, while building. Ten seconds is my line for
-  "I'd still use this by hand", and it leaves room for a slower moment on the
-  same laptop. The 200 ms inference cap is there so a slowdown in the model
-  itself can't hide inside the import time.
-- **C4** allows no extra steps. Any step a reader has to guess counts as a miss,
-  even if I can work around it.
-- **C5** must be exact. One fragment means a post got split and labelled as two
-  half-posts.
+**Rules for every trial:**
+- Run from the repo root with the `.venv` active.
+- Never pass `--epochs` or `--seed`, so the defaults (seed 42, 10 epochs) apply.
+- Every command logs to its own file under `logs/trials/` with `--log`, so the
+  records for a trial are exactly the lines in that file.
+- Trial *k* is `t1`, `t2` or `t3`.
+
+#### C1 — Agrees with the notebook
+
+The CLI gives the same answers as the notebook's model it claims to reproduce.
+
+- **Run:** `python classify.py train`, then
+  `python classify.py classify --csv test_split.csv --log logs/trials/c1_tk.jsonl`
+- **Count:** lines in `c1_tk.jsonl` where `"correct": true`, divided by the
+  number of lines (it must be 30).
+- **Pass:** 30 lines, and an accuracy **from 0.667 to 0.733 inclusive**. That's
+  the notebook's seed 42 result of 0.700 (21/30), plus or minus one post.
+- **Why ±1:** the CLI tokenizes without padding to 128, so one borderline post
+  could flip on floating-point rounding. Two or more flips would mean it isn't the
+  same model.
+
+#### C2 — Always leaves a record
+
+Every run, including a failed one, writes a log record. Run these 5 commands,
+each with `--log logs/trials/c2_tk.jsonl`:
+
+| Run | Command | Expected records |
+|---|---|---|
+| a | `python classify.py classify "Ryan destroyed buddy"` | 1, `status: ok` |
+| b | `python classify.py classify --csv data/c2_three_posts.csv` (the first 3 rows of `test_split.csv`, committed) | 3, `status: ok` |
+| c | `python classify.py classify "   "` | 1, `status: rejected` |
+| d | `python classify.py classify --csv no_such_file.csv` | 1, `status: rejected` |
+| e | Rename `models/takemeter/model.safetensors` to `model.safetensors.bak`, run `python classify.py classify "test"`, then rename it back. **Rename only that one file:** without `config.json` the CLI would retrain instead of failing | 1, `status: error` |
+
+- **Count:** `c2_tk.jsonl` must have exactly **7 lines**, in the order above,
+  with the statuses above.
+- **Every line must have** `timestamp`, `run_id`, `status`, `input`, and
+  `output` (a label, or `null` on a failure).
+- **Durations:** `ok` lines have `duration_ms`; failed lines have `process_ms`.
+- **Pass:** all of the above in every one of the 3 trials, 100%. A log that
+  misses some runs is the failure Milestone 3 warns about.
+
+#### C3 — Cost
+
+One run is cheap enough to use by hand.
+
+- **Run:** `python measure_cost.py`, then copy `logs/cost_runs.csv` to
+  `logs/trials/c3_tk.csv` *before* the next trial, because the script overwrites
+  it. The model must already be trained, or the script refuses to run.
+- **Read:** the `mean` column of the `wall_ms` and `duration_ms` lines it prints,
+  or average those columns in the CSV.
+- **Pass:** all 10 runs `status: ok`, **mean `wall_ms` ≤ 10,000**, and **mean
+  `duration_ms` ≤ 200**.
+- **Why these numbers:** I measured about 6.4 s once while building. Ten seconds
+  is my line for "I'd still use this by hand". The 200 ms cap means a slowdown in
+  the model itself can't hide inside the 5.5 s of import time.
+- **Same machine every trial:** this laptop, CPU only.
+
+#### C4 — Clean checkout
+
+Someone with only RUNNING.md can get a labelled post.
+
+- **Run:** make a new, empty folder (`clonetest_tk`). In a new PowerShell
+  window, type the six lines in RUNNING.md's **Clean-checkout setup** block,
+  exactly as written and in order.
+- **Pass:**
+  - the last line exits with code **0**
+  - `logs/classify_log.jsonl` in the clone contains **exactly one line**, with
+    `status: ok`
+  - `models/takemeter/takemeter_meta.json` in the clone has `test_accuracy`
+    **0.7**
+  - nothing was typed that isn't in that block
+- **What counts as a miss:** any extra command, such as an execution-policy fix,
+  a different `python`, or re-running a line. RUNNING.md listing a workaround
+  doesn't make it part of the six lines.
+- **Limit, stated up front:** this machine already has `distilbert-base-uncased`
+  in `~/.cache/huggingface/`, so C4 does **not** test the 257 MB first download.
+  Passing C4 means "works from a clean checkout on a machine with the base model
+  cached", nothing more.
+
+#### C5 — Multi-line posts stay whole
+
+A post that spans several lines comes back as one label.
+
+- **The three trials use three sets of posts.** Each is built by keeping the
+  rows whose `text` contains a newline:
+
+| Trial | Source | Posts | Committed as |
+|---|---|---|---|
+| t1 | `test_split.csv` | 9 | `data/c5_multiline_test.csv` |
+| t2 | `labels.csv` | 38 | `data/c5_multiline_labels.csv` |
+| t3 | `data/unlabelled_posts.csv` | 4 | `data/c5_multiline_unlabelled.csv` |
+
+- **Run:** `python classify.py classify --csv <that file> --log logs/trials/c5_tk.jsonl`
+- **Count:** the lines in `c5_tk.jsonl`, and for each line *i*, compare its
+  `input` with row *i*'s `text` after `.strip()`. The CLI trims surrounding
+  whitespace, and that isn't a split.
+- **Pass:** **line count = post count exactly** (9, 38, 4), and **every `input`
+  equals its post** with its inner newlines still there. One fragment means a
+  post got cut and labelled as two half-posts.
 
 ### Trials, verdicts and diagnoses
 
