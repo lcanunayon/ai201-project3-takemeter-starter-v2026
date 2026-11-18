@@ -2,7 +2,8 @@
 """
 Score the Milestone 5 trials against the README's pass rules, mechanically.
 
-    python score_trials.py
+    python score_trials.py                    # before: logs/trials
+    python score_trials.py logs/trials_after  # after the fix
 
 Reads logs/trials/*, prints one line per criterion per trial and the run-log
 table to paste into the README. It applies the rules as written, including
@@ -17,7 +18,8 @@ from pathlib import Path
 
 import pandas as pd
 
-T = Path(__file__).resolve().parent / "logs" / "trials"
+import sys
+T = Path(__file__).resolve().parent / (sys.argv[1] if len(sys.argv) > 1 else "logs/trials")
 TRIALS = ["t1", "t2", "t3"]
 C5_SETS = {"t1": "data/c5_multiline_test.csv", "t2": "data/c5_multiline_labels.csv",
            "t3": "data/c5_multiline_unlabelled.csv"}

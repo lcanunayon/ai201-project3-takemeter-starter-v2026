@@ -3,10 +3,11 @@
 # process, with no execution-policy override (the machine's real policy applies).
 #
 #   powershell -File run_c4.ps1 t1     # then t2, t3
+#   powershell -File run_c4.ps1 t1 -Out logs\trials_after   # after the fix
 #
 # Output: logs/trials/c4_<trial>_out.txt, and a copy of the clone's log + meta.
 
-param([Parameter(Mandatory)][string]$K)
+param([Parameter(Mandatory)][string]$K, [string]$Out = "logs\trials")
 $repo = $PSScriptRoot
 $base = Join-Path $env:TEMP "takemeter_c4"
 $dir = Join-Path $base "clonetest_$K"
@@ -27,7 +28,7 @@ $cmd += "`n" + 'exit $LASTEXITCODE'
 
 # Don't inherit this session's Process-scope Bypass.
 Remove-Item Env:PSExecutionPolicyPreference -ErrorAction SilentlyContinue
-$out = Join-Path $repo "logs\trials\c4_${K}_out.txt"
+$out = Join-Path $repo "$Out\c4_${K}_out.txt"
 $t = [Diagnostics.Stopwatch]::StartNew()
 Push-Location $dir
 & powershell.exe -Command $cmd *> $out
@@ -38,8 +39,8 @@ $secs = [math]::Round($t.Elapsed.TotalSeconds, 1)
 $clone = Join-Path $dir "ai201-project3-takemeter-starter-v2026"
 $log = Join-Path $clone "logs\classify_log.jsonl"
 $meta = Join-Path $clone "models\takemeter\takemeter_meta.json"
-Copy-Item $log (Join-Path $repo "logs\trials\c4_${K}_clone_log.jsonl") -ErrorAction SilentlyContinue
-Copy-Item $meta (Join-Path $repo "logs\trials\c4_${K}_meta.json") -ErrorAction SilentlyContinue
+Copy-Item $log (Join-Path $repo "$Out\c4_${K}_clone_log.jsonl") -ErrorAction SilentlyContinue
+Copy-Item $meta (Join-Path $repo "$Out\c4_${K}_meta.json") -ErrorAction SilentlyContinue
 $lines = if (Test-Path $log) { @(Get-Content $log) } else { @() }
 $summary = @"
 

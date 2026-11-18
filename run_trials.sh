@@ -12,7 +12,7 @@ K="${1:?usage: bash run_trials.sh t1|t2|t3}"
 cd "$(dirname "$0")"
 PY=".venv/Scripts/python.exe"; [ -x "$PY" ] || PY=".venv/bin/python"
 export PYTHONIOENCODING=utf-8
-T=logs/trials
+T="${TRIALS_DIR:-logs/trials}"   # after the fix: TRIALS_DIR=logs/trials_after
 mkdir -p "$T"
 noise='it/s|s/it|pin_memory|super\(\).__init__|Map: '
 
