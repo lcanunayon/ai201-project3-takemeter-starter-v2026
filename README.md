@@ -69,7 +69,7 @@ a clean checkout:
 `python classify.py classify "<post>"`. The command, the environment it needs
 (Python version, pinned dependencies, model files and their size) and the log
 format are in [RUNNING.md](RUNNING.md#the-capstone-extension-classifypy-path-b-local-with-logs).
-The committed run record is `logs/classify_log.jsonl`, pasted below.
+The committed run record is `logs/run_record.jsonl`, pasted below. It's a frozen copy, separate from the live log: see the C4 fix in Milestone 6.
 
 ### The original system still works
 
@@ -421,7 +421,7 @@ confident miss from a coin flip), `truncated` (posts past 128 tokens lose their
 end), `model_load_ms` vs `duration_ms` vs `process_ms` (where the time goes),
 and `expected` / `correct` when the input CSV has labels.
 
-**The run record.** These are the first 12 lines of `logs/classify_log.jsonl`, from a real
+**The run record.** These are the first 12 lines of `logs/run_record.jsonl` (called `logs/classify_log.jsonl` until the Milestone 6 fix), from a real
 session on 2026-11-14:
 - Entries 1–10 are the ten cost-measurement runs, one command each, on real
   r/Boxing comments from `data/unlabelled_posts.csv`. These were scraped but

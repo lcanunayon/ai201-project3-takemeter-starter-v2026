@@ -398,7 +398,8 @@ path working as intended. Let it finish.
 | `my_staff_labels.csv` | Your labels on the staff set. **You create this** |
 | `classify.py` | The capstone extension: classifies new posts from the command line |
 | `models/takemeter/` | The model `classify.py` loads. Built by its first run, 257 MB, **gitignored** |
-| `logs/classify_log.jsonl` | One JSON record per classified post or failed run. **Commit it**: it's the run record |
+| `logs/classify_log.jsonl` | The live log: one JSON record per classified post or failed run. **Gitignored**, so every checkout starts empty |
+| `logs/run_record.jsonl` | The committed run record: a frozen copy of a real session (2026-11-14), plus the Milestone 5 C3 runs |
 | `measure_cost.py` | Runs the CLI 10 times as separate processes and times them |
 | `logs/cost_runs.csv` | Those 10 timings |
 | `data/unlabelled_posts.csv` | 28 scraped r/Boxing comments, never labelled or trained on |

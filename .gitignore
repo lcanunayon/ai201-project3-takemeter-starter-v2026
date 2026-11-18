@@ -28,3 +28,8 @@ Thumbs.db
 # NOTE: results.json, results_three_seeds.json and baseline_results.json are
 # deliberately NOT ignored. They're evidence the run actually happened, and
 # they're part of what gets graded. Commit them.
+
+# classify.py's live log. Every checkout starts with an empty one: committing it
+# made each clone inherit my runs (C4 miss, capstone M6). The committed, frozen
+# run record is logs/run_record.jsonl.
+logs/classify_log.jsonl
