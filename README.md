@@ -67,7 +67,7 @@ split and settings. It was well under the ninety-minute limit.
 **Path B: local with logs.** One documented command starts it, and it works from
 a clean checkout:
 `python classify.py classify "<post>"`. The command, the environment it needs
-(Python version, pinned dependencies, model files and their size) and the log
+(Python version, dependencies with the versions I tested, model files and their size) and the log
 format are in [RUNNING.md](RUNNING.md#the-capstone-extension-classifypy-path-b-local-with-logs).
 The committed run record is `logs/run_record.jsonl`, pasted below. It's a frozen copy, separate from the live log: see the C4 fix in Milestone 6.
 
@@ -395,8 +395,9 @@ Logged to logs\trials\c5_t3.jsonl
 - **The clones didn't install the versions RUNNING.md says were tested.** They
   got torch **2.15.0** and accelerate **1.16.0**, against 2.14.1 / 1.15.0 here,
   because `requirements.txt` gives ranges (`torch>=2.2,<3.0`), not pins.
-  RUNNING.md calls them "pinned dependencies", and they aren't. It made no
-  difference to the result this time.
+  This README's Run path line called them "pinned dependencies", and
+  `test.py` reports a "Pinned packages" check, but they aren't pinned. It made
+  no difference to the result this time.
 - **C4 trial 1 took 841 s; trials 2 and 3 took 420 s and 364 s.** Trial 1
   downloaded the newer wheels, and the later clones reused pip's cache.
 
@@ -552,6 +553,45 @@ took 160 s with a warm pip cache.
 Hardware: CPU only (`device: cpu`), Windows 11, Python 3.13.7, torch 2.14.1+cpu,
 31.7 GB RAM.
 
+**Confirmed by 60 more runs in Milestones 5 and 6.** The six C3 trials, before
+and after the fix, ran the same 10 runs each. Pooled with the 10 above, that's
+**70 runs**:
+
+| Measure | Value |
+|---|---|
+| Wall-clock mean | **6.62 s** |
+| SD | 0.20 s |
+| Slowest run | 7.22 s |
+| Inference mean | 40.8 ms |
+
+Raw numbers are in `logs/trials*/c3_t*.csv`. 6.62 s is the per-run figure I use
+below.
+
+#### For a hundred people a day
+
+**Assumption:** 100 people each classify 10 posts a day. That's 1,000 posts.
+
+**As single runs**, one command per post as measured:
+
+> 1,000 runs × 6.62 s = **6,620 s of CPU a day ≈ 1.8 hours**
+
+**As one `--csv` batch per person.** A batch pays the startup once. Startup is
+the wall-clock minus inference: 6.62 − 0.04 = 6.58 s. Then:
+
+> 100 batches × 6.58 s = 658 s of startup
+>
+> 1,000 posts × 0.0408 s = 41 s of inference
+>
+> 658 + 41 = **699 s a day ≈ 11.7 minutes**
+
+**In dollars:** $0 marginal on my own laptop. There's no API and no tokens, so
+the cost is CPU time.
+
+**The arithmetic says the cost is the shape of the calls, not the model.**
+Batching cuts it by 9.5× (6,620 ÷ 699). Even unbatched, 1.8 CPU-hours a day
+fits on one ordinary machine. Training (about 120 s) is paid once per checkout,
+not per person.
+
 ### The improvement
 
 **One change, aimed at the C4 diagnosis: separate the run record from the live
@@ -615,9 +655,111 @@ Both only show up when the log has a single line, which never happened before
 the fix. The clones had already run. I recomputed the summaries from the same
 clone folders without re-running, and each `c4_tk_out.txt` labels that block.
 
-### What's left
+### What's Still Broken
 
-<!-- TODO: what you'd do next, and why you stopped. -->
+**No criterion is still missed.** C4 was the only miss, and it's MET in 3 of 3
+after the fix. Meeting all five doesn't make this section empty, though:
+
+**1. C3's target was set too low.**
+- **The evidence:** across 70 measured runs, the mean was 6.62 s and the
+  slowest single run was 7.22 s, against a target of ≤ 10 s. A run could get
+  about 50% slower and still pass.
+- **I'd tighten it to:** mean wall-clock ≤ 7.5 s, and no single run over 8 s.
+  That's about 13% over the measured mean, and above the slowest run.
+- **C1 has slack it doesn't need, too.** Training is bit-for-bit deterministic
+  (the same weight hash in 6 of 6 retrains), so "±1 post" should be "the same
+  label as the notebook on all 30 posts".
+- **Why I stopped there:** tightening a target after the results are in, and
+  then re-scoring against it, would be grading my own homework twice. The
+  honest move is to name the new targets for the next round of testing, not to
+  apply them to this one.
+
+**2. The dependencies aren't pinned.**
+- **What's wrong:** this is the second symptom from the pattern in Verdicts and
+  diagnoses. `requirements.txt` gives ranges, so clones installed torch 2.15.0
+  and accelerate 1.16.0 instead of the tested 2.14.1 and 1.15.0. This README
+  called them "pinned" until Milestone 7, and `test.py`'s "Pinned packages" check
+  still does. It happened to make no difference this time.
+- **What I'd do:** generate a lock file (`pip freeze > requirements.lock`),
+  point RUNNING.md at it, and add a C4-style trial that compares the clone's
+  versions with it.
+- **Why I stopped:** the milestone allows one improvement, and the C4 miss was
+  the one a criterion actually caught.
+
+**3. Things the criteria don't cover**, each named so nobody mistakes "all five
+met" for "it works everywhere":
+- **The model leans toward `hot_take`.** All 10 unlabelled real posts in the
+  run record came out `hot_take`, and the classifier still gets 0 F1 on
+  `informative` and `offensive` (project 3). The CLI faithfully exposes a weak
+  model. Fixing the model was out of scope for the Shape C extension.
+- **C4 can't test the first download.** This machine had `distilbert-base-uncased`
+  cached, so the 257 MB first download is untested, as stated in C4's limit.
+- **The harness only runs on Windows.** `run_c4.ps1` is PowerShell-only, and
+  only Windows was tested.
+
+#### What I'd do next
+
+**First, pin the dependencies with a lock file**, before touching the model. It's
+the only thing that makes "works from a clean checkout" mean the *same* checkout
+I tested. Every other result here, C1's 0.700 included, quietly assumes the
+reader got torch 2.14.1. The trials showed they don't.
+
+### How I Used AI
+
+I used Claude (Claude Code, in VS Code) for the whole capstone. The decisions
+were mine; most of the code, the running and the first drafts of the write-up
+were Claude's.
+
+**Moment 1: choosing the capability**
+- *What I asked for:* help picking ONE capability for Shape C.
+- *What came back:* four options with their trade-offs:
+  - a classify CLI (recommended, because it also gives the run path, the
+    logging and the cost number)
+  - an "unsure" output
+  - a fifth label
+  - a local HTTP endpoint
+- *What I did:* I chose the CLI. The other three became my out-of-scope list.
+
+**Moment 2: making the criteria checkable**
+- *What I asked for:* I picked five of the six criterion directions it
+  suggested (agrees with the notebook, always leaves a record, cost, clean
+  checkout, multi-line posts) and asked it to set reasonable numbers. Then I had
+  it run the self-check: could a person who can't ask me what I meant score
+  each one?
+- *What came back:* the first draft failed in all five. There was no rule for
+  which log records to count, the C2 CSV wasn't named, "hide the model" was
+  undefined, C3's file got overwritten between trials, and C5 had no strip rule.
+  It rewrote each criterion as an exact procedure with the targets unchanged,
+  and both versions are committed (`62de4d1`, `e4d999d`).
+- *What I changed:* nothing in the targets. **The numbers were Claude's, set at
+  my request.** I'm disclosing that because the brief asks for criteria written
+  by me.
+
+**Everything else, so it's all disclosed:**
+- **Code Claude wrote:** `classify.py`, `measure_cost.py`, `run_trials.sh`,
+  `run_c4.ps1`, `score_trials.py`, and the script that pulled the 28 unlabelled
+  posts out of `posts_raw2.txt`.
+- **Running things:** Claude ran every trial (before and after), the six clean
+  clones, the regression check of the original notebook and scripts, and the
+  cost runs, and made every commit and push. Each push was at my say-so.
+- **Diagnosis and fix:** Claude traced the C4 miss to the run record and the
+  live log being one file, and proposed the fix: split them, gitignore the live
+  log, and leave the criterion alone. I agreed with leaving the criterion
+  unchanged. Claude also caught its own bugs along the way and reported them in
+  the README instead of hiding them:
+  - the README's wrong confidence range
+  - a wrong claim that RUNNING.md called the dependencies "pinned"
+  - two PowerShell harness bugs
+  - `cost_runs.csv` being overwritten
+- **Writing Claude drafted from the results:** every capstone section of this
+  README and the capstone part of RUNNING.md.
+- **What I decided:**
+  - the system (TakeMeter), Shape C and the CLI capability
+  - Path B
+  - keeping the work in the original repo, not a copy
+  - which five criteria
+  - asking for the self-check before testing
+  - when to commit and push
 
 ---
 
